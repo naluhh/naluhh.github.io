@@ -19,15 +19,31 @@
 
 <style>
   :root {
-    --ink: #0e0e0e;
-    --ink-soft: #565656;
-    --yellow: #fffa63;
-    --yellow-deep: #f4ec2e;
-    --bg: #fbfbf7;
+    --ink: #18191c;
+    --ink-soft: #565656;          /* DSM Text/Secondary territory */
+    /* Brand blue — DSM Surface/Subtle (#00b4ff). sRGB fallbacks; upgraded to
+       display-p3 below for wide-gamut screens. */
+    --accent: #00b4ff;            /* DSM Surface/Subtle */
+    --accent-deep: #009bdb;       /* DSM Surface/Subtle-Dark */
+    --accent-light: #ccf0ff;      /* DSM Surface/Subtle-Light */
+    --accent-ink: #1d5fcc;        /* DSM Text/Highlight-Dark-Fixed */
+    --accent-glow: rgba(0,180,255,.45);
+    --bg: #f6fbfe;
     --card: #ffffff;
-    --line: #ececdf;
+    --line: #e6eef3;
     --radius: 26px;
-    --shadow: 0 18px 50px -22px rgba(0,0,0,.22);
+    --shadow: 0 18px 50px -22px rgba(13,40,60,.20);
+  }
+
+  /* Wide-gamut: use the real P3 values straight from the design system */
+  @supports (color: color(display-p3 1 1 1)) {
+    :root {
+      --accent: color(display-p3 0 0.706 1);
+      --accent-deep: color(display-p3 0 0.608 0.859);
+      --accent-light: color(display-p3 0.8 0.941 1);
+      --accent-ink: color(display-p3 0.114 0.373 0.8);
+      --accent-glow: color(display-p3 0 0.706 1 / .45);
+    }
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,8 +73,8 @@
     opacity: .5;
     pointer-events: none;
   }
-  .blob.y1 { width: 320px; height: 320px; background: var(--yellow); top: -120px; right: -80px; opacity: .35; }
-  .blob.y2 { width: 220px; height: 220px; background: var(--yellow); bottom: -60px; left: -70px; opacity: .25; }
+  .blob.y1 { width: 340px; height: 340px; background: var(--accent); top: -130px; right: -90px; opacity: .14; }
+  .blob.y2 { width: 240px; height: 240px; background: var(--accent-light); bottom: -60px; left: -80px; opacity: .55; }
 
   /* ---------- nav ---------- */
   header {
@@ -66,7 +82,7 @@
     top: 0;
     z-index: 50;
     backdrop-filter: saturate(150%) blur(12px);
-    background: rgba(251,251,247,.78);
+    background: rgba(246,251,254,.82);
     border-bottom: 1px solid var(--line);
   }
   .nav { display: flex; align-items: center; justify-content: space-between; height: 68px; }
@@ -74,12 +90,13 @@
   .brand svg { width: 34px; height: 34px; display: block; }
   .nav-cta {
     display: inline-flex; align-items: center; gap: 8px;
-    background: var(--ink); color: #fff;
+    background: var(--accent); color: #fff;
     padding: 9px 18px; border-radius: 999px;
     font-weight: 700; font-size: 15px;
+    box-shadow: 0 8px 18px -8px var(--accent-glow);
     transition: transform .18s ease, box-shadow .18s ease;
   }
-  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 10px 24px -10px rgba(0,0,0,.5); }
+  .nav-cta:hover { transform: translateY(-2px); box-shadow: 0 12px 26px -8px var(--accent-glow); }
 
   /* ---------- hero ---------- */
   .hero { position: relative; text-align: center; padding: 72px 0 56px; }
@@ -101,17 +118,12 @@
     letter-spacing: -.01em;
     overflow-wrap: break-word;
   }
+  /* "best fenn" rendered in the brand blue — DSM Text/Accent shares the
+     wordmark's identity (Surface/Subtle hue). */
   .hero h1 .hl {
     position: relative;
     white-space: nowrap;
-  }
-  .hero h1 .hl::after {
-    content: "";
-    position: absolute; left: -4px; right: -4px; bottom: 6px; height: 38%;
-    background: var(--yellow);
-    z-index: -1;
-    border-radius: 6px;
-    transform: rotate(-1deg);
+    color: var(--accent);
   }
   .hero p.sub {
     font-family: "Fredoka", sans-serif;
@@ -154,7 +166,7 @@
   .card .icon {
     width: 84px; height: 84px;
     display: flex; align-items: center; justify-content: center;
-    background: var(--bg);
+    background: var(--accent-light);
     border-radius: 22px;
     margin-bottom: 18px;
   }
@@ -174,9 +186,9 @@
     text-align: center;
   }
   .contact-box .glow {
-    position: absolute; width: 360px; height: 360px; border-radius: 50%;
-    background: var(--yellow); opacity: .16; filter: blur(10px);
-    top: -140px; left: 50%; transform: translateX(-50%);
+    position: absolute; width: 380px; height: 380px; border-radius: 50%;
+    background: var(--accent); opacity: .28; filter: blur(12px);
+    top: -150px; left: 50%; transform: translateX(-50%);
     pointer-events: none;
   }
   .contact-box h2 { position: relative; font-size: clamp(28px, 5vw, 42px); font-weight: 600; }
@@ -184,12 +196,12 @@
   .mail-btn {
     position: relative;
     display: inline-flex; align-items: center; gap: 10px;
-    background: var(--yellow); color: var(--ink);
+    background: var(--accent); color: #fff;
     font-family: "Fredoka", sans-serif; font-weight: 600; font-size: 18px;
     padding: 14px 26px; border-radius: 999px;
     transition: transform .18s ease, box-shadow .18s ease;
   }
-  .mail-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -12px rgba(255,250,99,.5); }
+  .mail-btn:hover { transform: translateY(-3px); box-shadow: 0 16px 32px -12px var(--accent-glow); }
 
   /* ---------- footer ---------- */
   footer { padding: 40px 0 56px; border-top: 1px solid var(--line); margin-top: 40px; }
@@ -288,8 +300,8 @@
             <svg viewBox="0 0 140 137" fill="none" xmlns="http://www.w3.org/2000/svg">
               <rect x="35.04" y="51.42" width="78.54" height="59.6" rx="4.81" transform="rotate(-7 35.04 51.42)" fill="white"/>
               <path d="M70.35 17.04C84.1 15.35 96.95 14.27 105.1 13.68C108.17 13.45 109.71 13.34 111.05 13.86C112.2 14.31 113.28 15.15 113.99 16.16C114.81 17.34 115.07 18.85 115.59 21.88C116.99 30.01 119.09 43.19 121.01 58.88C122.95 74.62 124.1 87.96 124.71 96.18C124.94 99.2 125.05 100.72 124.53 102.06C124.09 103.2 123.25 104.29 122.25 104.99C121.07 105.82 119.59 106.08 116.62 106.6C109.02 107.94 96.89 109.9 81.97 111.73C67.06 113.56 54.81 114.59 47.12 115.14C44.11 115.35 42.61 115.46 41.27 114.94C40.13 114.49 39.04 113.64 38.34 112.64C37.52 111.46 37.26 109.97 36.75 106.98C35.35 98.85 33.24 85.63 31.31 69.89C29.38 54.21 28.24 40.91 27.62 32.68C27.39 29.62 27.28 28.08 27.79 26.74C28.24 25.59 29.08 24.51 30.08 23.8C31.26 22.97 32.78 22.71 35.81 22.18C43.87 20.79 56.6 18.73 70.35 17.04ZM42.19 51.59C39.56 51.92 37.68 54.31 38.01 56.95L43.67 103.1C44 105.74 46.4 107.61 49.03 107.29L112.88 99.45C115.52 99.13 117.39 96.73 117.07 94.09L111.4 47.94C111.08 45.3 108.68 43.43 106.04 43.75L42.19 51.59Z" fill="black"/>
-              <path d="M36.13 14.23C36.13 13.81 36.46 13.48 36.88 13.48C37.29 13.48 37.63 13.81 37.63 14.23C37.63 20.25 39.74 25.31 43.3 28.86C46.87 32.42 51.93 34.51 57.91 34.51C58.33 34.51 58.66 34.85 58.66 35.26C58.66 35.65 58.37 35.97 57.99 36.01L57.36 36.02C51.62 36.15 46.76 38.24 43.3 41.69C39.74 45.26 37.63 50.32 37.63 56.3C37.63 56.71 37.29 57.05 36.88 57.05C36.49 57.05 36.17 56.76 36.13 56.38L36.13 56.3C36.13 50.32 34.06 45.26 30.52 41.69C26.98 38.13 21.92 36.01 15.84 36.01C15.43 36.01 15.09 35.68 15.09 35.26C15.09 34.85 15.43 34.51 15.84 34.51C21.92 34.51 26.98 32.42 30.52 28.87C34.06 25.31 36.13 20.25 36.13 14.23Z" fill="#FFFA63" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
-              <path d="M59.38 8.67C59.38 8.26 59.72 7.92 60.13 7.92C60.55 7.92 60.88 8.26 60.88 8.67C60.88 12.36 62.18 15.45 64.35 17.62C66.52 19.78 69.61 21.07 73.28 21.07C73.69 21.07 74.03 21.4 74.03 21.82C74.03 22.21 73.73 22.53 73.36 22.56L72.94 22.57C69.42 22.65 66.45 23.93 64.35 26.03C62.18 28.21 60.88 31.3 60.88 34.97C60.88 35.38 60.55 35.72 60.13 35.72C59.74 35.72 59.42 35.42 59.39 35.04L59.38 34.97C59.38 31.29 58.11 28.2 55.96 26.03C53.8 23.86 50.72 22.57 46.98 22.57C46.57 22.57 46.23 22.23 46.23 21.82C46.23 21.4 46.57 21.07 46.98 21.07C50.72 21.07 53.81 19.78 55.96 17.62C58.11 15.46 59.38 12.37 59.38 8.67Z" fill="#FFFA63" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M36.13 14.23C36.13 13.81 36.46 13.48 36.88 13.48C37.29 13.48 37.63 13.81 37.63 14.23C37.63 20.25 39.74 25.31 43.3 28.86C46.87 32.42 51.93 34.51 57.91 34.51C58.33 34.51 58.66 34.85 58.66 35.26C58.66 35.65 58.37 35.97 57.99 36.01L57.36 36.02C51.62 36.15 46.76 38.24 43.3 41.69C39.74 45.26 37.63 50.32 37.63 56.3C37.63 56.71 37.29 57.05 36.88 57.05C36.49 57.05 36.17 56.76 36.13 56.38L36.13 56.3C36.13 50.32 34.06 45.26 30.52 41.69C26.98 38.13 21.92 36.01 15.84 36.01C15.43 36.01 15.09 35.68 15.09 35.26C15.09 34.85 15.43 34.51 15.84 34.51C21.92 34.51 26.98 32.42 30.52 28.87C34.06 25.31 36.13 20.25 36.13 14.23Z" fill="#00b4ff" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M59.38 8.67C59.38 8.26 59.72 7.92 60.13 7.92C60.55 7.92 60.88 8.26 60.88 8.67C60.88 12.36 62.18 15.45 64.35 17.62C66.52 19.78 69.61 21.07 73.28 21.07C73.69 21.07 74.03 21.4 74.03 21.82C74.03 22.21 73.73 22.53 73.36 22.56L72.94 22.57C69.42 22.65 66.45 23.93 64.35 26.03C62.18 28.21 60.88 31.3 60.88 34.97C60.88 35.38 60.55 35.72 60.13 35.72C59.74 35.72 59.42 35.42 59.39 35.04L59.38 34.97C59.38 31.29 58.11 28.2 55.96 26.03C53.8 23.86 50.72 22.57 46.98 22.57C46.57 22.57 46.23 22.23 46.23 21.82C46.23 21.4 46.57 21.07 46.98 21.07C50.72 21.07 53.81 19.78 55.96 17.62C58.11 15.46 59.38 12.37 59.38 8.67Z" fill="#00b4ff" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
               <path d="M74.12 87.19C73.65 83.39 76.05 79.83 79.74 78.83L80.3 78.68C84.91 77.43 89.45 80.91 89.43 85.69C89.43 87.85 86.63 88.69 85.43 86.89L84.88 86.05C83.68 84.25 80.91 84.73 80.39 86.84L79.86 89C79.12 92.06 74.68 91.8 74.3 88.67L74.12 87.19Z" fill="black"/>
               <path d="M94.25 84.72C93.78 80.92 96.18 77.36 99.87 76.36L100.43 76.21C105.05 74.96 109.58 78.44 109.57 83.22C109.56 85.38 106.76 86.22 105.57 84.42L105.01 83.58C103.81 81.78 101.04 82.26 100.53 84.37L99.998 86.53C99.25 89.59 94.82 89.33 94.43 86.2L94.25 84.72Z" fill="black"/>
             </svg>
@@ -306,8 +318,8 @@
               <path fill-rule="evenodd" clip-rule="evenodd" d="M20.33 61.82C23.2 60.24 27.07 61.78 28.99 65.26C30.9 68.74 30.13 72.84 27.27 74.41C24.4 75.99 20.53 74.45 18.61 70.97C16.7 67.5 17.47 63.4 20.33 61.82ZM66.62 31.26C85.67 28.92 102.01 34.29 103.11 43.25C104.21 52.22 89.66 61.38 70.61 63.72C51.56 66.06 35.23 60.69 34.12 51.72C33.02 42.76 47.58 33.6 66.62 31.26Z" fill="black"/>
               <path d="M69.66 87.42C69.18 83.56 71.62 79.93 75.37 78.92L75.94 78.76C80.63 77.5 85.24 81.03 85.23 85.89C85.23 88.09 82.38 88.94 81.16 87.11L80.6 86.26C79.38 84.43 76.56 84.92 76.04 87.06L75.5 89.26C74.74 92.37 70.23 92.1 69.84 88.92L69.66 87.42Z" fill="black"/>
               <path d="M89.18 81.12C88.71 77.26 91.15 73.64 94.9 72.63L95.47 72.47C100.16 71.2 104.77 74.74 104.76 79.6C104.75 81.79 101.91 82.65 100.69 80.82L100.13 79.97C98.91 78.13 96.09 78.63 95.56 80.77L95.03 82.96C94.27 86.08 89.76 85.81 89.37 82.63L89.18 81.12Z" fill="black"/>
-              <path d="M44.64 17.45C44.64 17.04 44.31 16.7 43.89 16.7C43.48 16.7 43.14 17.04 43.14 17.45C43.14 23.57 40.99 28.72 37.37 32.34C33.74 35.96 28.59 38.09 22.5 38.09C22.09 38.09 21.75 38.43 21.75 38.84C21.75 39.23 22.05 39.55 22.43 39.59L23.31 39.6C31.59 39.87 38.06 44.16 41.15 50.8C41.3 51.11 41.64 51.29 41.98 51.22C42.32 51.15 42.56 50.86 42.58 50.52C42.58 50.49 42.58 50.46 42.59 50.43C42.61 50.26 42.68 49.84 42.96 48.92C43.33 47.92 44.05 46.57 45.46 45.2C48.26 42.47 53.91 39.59 65.28 39.59C65.7 39.59 66.03 39.25 66.03 38.84C66.03 38.43 65.7 38.09 65.28 38.09C59.1 38.09 53.95 35.96 50.35 32.34C46.74 28.73 44.64 23.58 44.64 17.45Z" fill="#FFFA63" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
-              <path d="M20.99 11.8C20.99 11.39 20.66 11.05 20.25 11.05C19.83 11.05 19.5 11.39 19.5 11.8C19.5 15.56 18.18 18.71 15.97 20.91C13.76 23.11 10.61 24.42 6.88 24.42C6.46 24.42 6.13 24.76 6.13 25.17C6.13 25.56 6.42 25.88 6.8 25.92L7.22 25.92C10.81 26 13.82 27.31 15.97 29.45C18.18 31.66 19.5 34.81 19.5 38.54C19.5 38.95 19.83 39.29 20.25 39.29C20.63 39.29 20.95 38.99 20.99 38.62L20.99 38.54C20.99 34.8 22.29 31.66 24.48 29.45C26.67 27.24 29.82 25.92 33.61 25.92C34.03 25.92 34.36 25.58 34.36 25.17C34.36 24.76 34.03 24.42 33.61 24.42C29.82 24.42 26.67 23.11 24.48 20.91C22.29 18.71 20.99 15.57 20.99 11.8Z" fill="#FFFA63" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M44.64 17.45C44.64 17.04 44.31 16.7 43.89 16.7C43.48 16.7 43.14 17.04 43.14 17.45C43.14 23.57 40.99 28.72 37.37 32.34C33.74 35.96 28.59 38.09 22.5 38.09C22.09 38.09 21.75 38.43 21.75 38.84C21.75 39.23 22.05 39.55 22.43 39.59L23.31 39.6C31.59 39.87 38.06 44.16 41.15 50.8C41.3 51.11 41.64 51.29 41.98 51.22C42.32 51.15 42.56 50.86 42.58 50.52C42.58 50.49 42.58 50.46 42.59 50.43C42.61 50.26 42.68 49.84 42.96 48.92C43.33 47.92 44.05 46.57 45.46 45.2C48.26 42.47 53.91 39.59 65.28 39.59C65.7 39.59 66.03 39.25 66.03 38.84C66.03 38.43 65.7 38.09 65.28 38.09C59.1 38.09 53.95 35.96 50.35 32.34C46.74 28.73 44.64 23.58 44.64 17.45Z" fill="#00b4ff" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
+              <path d="M20.99 11.8C20.99 11.39 20.66 11.05 20.25 11.05C19.83 11.05 19.5 11.39 19.5 11.8C19.5 15.56 18.18 18.71 15.97 20.91C13.76 23.11 10.61 24.42 6.88 24.42C6.46 24.42 6.13 24.76 6.13 25.17C6.13 25.56 6.42 25.88 6.8 25.92L7.22 25.92C10.81 26 13.82 27.31 15.97 29.45C18.18 31.66 19.5 34.81 19.5 38.54C19.5 38.95 19.83 39.29 20.25 39.29C20.63 39.29 20.95 38.99 20.99 38.62L20.99 38.54C20.99 34.8 22.29 31.66 24.48 29.45C26.67 27.24 29.82 25.92 33.61 25.92C34.03 25.92 34.36 25.58 34.36 25.17C34.36 24.76 34.03 24.42 33.61 24.42C29.82 24.42 26.67 23.11 24.48 20.91C22.29 18.71 20.99 15.57 20.99 11.8Z" fill="#00b4ff" stroke="black" stroke-width="1.5" stroke-linejoin="round"/>
             </svg>
           </div>
           <h3>Bring your people</h3>
