@@ -1,0 +1,276 @@
+/* ============================================================
+   FENN — marketing site
+   Built on the Fenn design system (colors_and_type.css)
+   ============================================================ */
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  color: var(--fg-1);
+  background: var(--bg-surface);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+a { color: inherit; }
+img { max-width: 100%; }
+
+:root { --maxw: 1200px; --gutter: 40px; }
+
+.wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 var(--gutter); }
+
+/* ---------- shared section rhythm ---------- */
+section { position: relative; }
+.eyebrow {
+  font-size: 14px; font-weight: var(--w-bold);
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--fenn-blue);
+}
+.sec-head { max-width: 720px; }
+.sec-head h2 {
+  font-size: clamp(34px, 4.6vw, 54px); line-height: 1.04;
+  font-weight: var(--w-bold); letter-spacing: -.03em;
+  margin: 16px 0 0;
+}
+.sec-head p {
+  font-size: clamp(18px, 2vw, 21px); line-height: 1.5;
+  font-weight: var(--w-medium); color: var(--fg-1); opacity: .6;
+  margin: 18px 0 0; max-width: 560px;
+}
+
+/* ============================================================
+   NAV
+   ============================================================ */
+.nav {
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(242,242,242,.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom: 1px solid rgba(0,0,0,.04);
+}
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+.brand { display: flex; align-items: center; gap: 4px; text-decoration: none; }
+.brand img { width: 40px; height: 45px; display: block; margin-left: -6px; }
+.brand span { font-size: 21px; font-weight: var(--w-bold); letter-spacing: var(--track-tight); }
+.nav-links { display: flex; align-items: center; gap: 30px; }
+.nav-links a.link { font-size: 15px; font-weight: var(--w-medium); text-decoration: none; opacity: .7; transition: opacity .15s; }
+.nav-links a.link:hover { opacity: 1; }
+.btn-getapp {
+  display: inline-flex; align-items: center; height: 40px; padding: 0 18px;
+  border-radius: var(--r-pill); background: var(--bg-surface);
+  font-size: 15px; font-weight: var(--w-semibold); letter-spacing: var(--track-tight);
+  text-decoration: none; box-shadow: var(--shadow-card);
+  transition: transform .15s ease;
+}
+.btn-getapp:hover { transform: translateY(-1px); }
+
+/* ============================================================
+   APP STORE BADGE
+   ============================================================ */
+.appstore {
+  display: inline-flex; align-items: center; gap: 11px;
+  height: 56px; padding: 0 22px 0 18px;
+  background: #000; color: #fff; border-radius: 14px;
+  text-decoration: none; box-shadow: 0 10px 24px rgba(0,0,0,.16);
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.appstore:hover { transform: translateY(-2px); box-shadow: 0 16px 30px rgba(0,0,0,.22); }
+.appstore svg { width: 26px; height: 26px; flex: none; }
+.appstore .as-txt { display: flex; flex-direction: column; line-height: 1; text-align: left; }
+.appstore .as-sm { font-size: 11px; font-weight: var(--w-medium); opacity: .85; letter-spacing: .02em; }
+.appstore .as-lg { font-size: 19px; font-weight: var(--w-semibold); letter-spacing: -.01em; margin-top: 3px; }
+.appstore.light { background: #fff; color: #000; }
+.free-pill { font-size: 14px; font-weight: var(--w-bold); letter-spacing: var(--track-tight); color: var(--success); }
+
+/* ============================================================
+   HERO
+   ============================================================ */
+.hero {
+  background:
+    radial-gradient(110% 80% at 90% 8%, rgba(0,180,255,.16), rgba(0,180,255,0) 55%),
+    var(--bg-app);
+  padding: 80px 0 96px;
+  overflow: hidden;
+}
+.hero .wrap { display: grid; grid-template-columns: 1fr 360px; gap: 48px; align-items: center; }
+.hero h1 {
+  font-size: clamp(42px, 5.6vw, 70px); line-height: 1.0;
+  font-weight: var(--w-bold); letter-spacing: -.035em; margin: 18px 0 0;
+}
+#rotW { color: var(--u-10); white-space: nowrap; display: inline-block;
+  transition: opacity .35s ease, transform .35s ease; }
+.hero p.sub {
+  font-size: clamp(18px, 2.1vw, 22px); line-height: 1.45;
+  font-weight: var(--w-medium); color: var(--fg-1); opacity: .62;
+  margin: 26px 0 36px; max-width: 480px;
+}
+.hero .cta { display: flex; align-items: center; gap: 18px; }
+.hero-phone {
+  justify-self: end;
+  background: #fff; border: 7px solid #fff; border-radius: 46px;
+  overflow: hidden; width: 330px; height: 540px;
+  box-shadow: 0 44px 80px -24px rgba(0,0,0,.32), var(--shadow-card);
+}
+.hero-phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+
+/* crew chips strip */
+.crew-strip { background: var(--bg-surface); padding: 28px 0; border-bottom: 1px solid var(--line); }
+.crew-strip .wrap { display: flex; align-items: center; gap: 18px; flex-wrap: wrap; justify-content: center; }
+.crew-strip .lbl { font-size: 14px; font-weight: var(--w-semibold); opacity: .45; }
+.chip {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 9px 16px; border-radius: var(--r-pill);
+  background: var(--bg-app); font-size: 15px; font-weight: var(--w-semibold);
+  letter-spacing: var(--track-tight);
+}
+.chip .dot { width: 9px; height: 9px; border-radius: 50%; }
+
+/* ============================================================
+   FEATURES (3 cards)
+   ============================================================ */
+.features { padding: 110px 0; background: var(--bg-surface); }
+.feat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+.feat-card {
+  background: var(--bg-app); border-radius: 24px; padding: 32px;
+  box-shadow: var(--shadow-card);
+}
+.feat-card .ficon {
+  width: 54px; height: 54px; border-radius: 16px;
+  display: grid; place-items: center; margin-bottom: 22px;
+  background: var(--grad-blue); box-shadow: var(--grad-blue-glow);
+}
+.feat-card .ficon img { width: 26px; height: 26px; }
+.feat-card h3 { font-size: 23px; font-weight: var(--w-bold); letter-spacing: -.02em; margin: 0 0 10px; }
+.feat-card p { font-size: 17px; line-height: 1.5; font-weight: var(--w-medium); color: var(--fg-1); opacity: .6; margin: 0; }
+
+/* ============================================================
+   HOW IT WORKS
+   ============================================================ */
+.how { padding: 110px 0; background: var(--bg-app); }
+.how-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 56px; }
+.step .num {
+  font-size: 15px; font-weight: var(--w-bold); color: var(--fenn-blue);
+  width: 40px; height: 40px; border-radius: 50%; background: var(--bg-surface);
+  display: grid; place-items: center; box-shadow: var(--shadow-card); margin-bottom: 20px;
+}
+.step h3 { font-size: 22px; font-weight: var(--w-bold); letter-spacing: -.02em; margin: 0 0 10px; }
+.step p { font-size: 17px; line-height: 1.5; font-weight: var(--w-medium); color: var(--fg-1); opacity: .6; margin: 0; }
+
+/* ============================================================
+   SHOWCASE (sticky phone swap)
+   ============================================================ */
+.showcase { background: var(--bg-surface); padding: 100px 0 40px; }
+.showcase .head-center { text-align: center; max-width: 680px; margin: 0 auto 12px; }
+.showcase .head-center h2 { font-size: clamp(34px, 4.6vw, 54px); line-height: 1.04; font-weight: var(--w-bold); letter-spacing: -.03em; margin: 14px 0 0; }
+.sc-stage { display: grid; grid-template-columns: 1fr 380px; gap: 64px; align-items: start; margin-top: 40px; }
+.sc-steps { display: flex; flex-direction: column; }
+.sc-step { min-height: 78vh; display: flex; flex-direction: column; justify-content: center; padding: 30px 0; }
+.sc-step .kicker { font-size: 14px; font-weight: var(--w-bold); letter-spacing: .08em; text-transform: uppercase; color: var(--fenn-blue); transition: opacity .3s; }
+.js .sc-step .kicker { opacity: .55; }
+.sc-step h3 { font-size: clamp(30px, 3.6vw, 44px); line-height: 1.08; font-weight: var(--w-bold); letter-spacing: -.03em; margin: 16px 0 0; transition: opacity .4s ease, transform .4s ease; }
+.js .sc-step h3 { opacity: .32; }
+.sc-step p { font-size: 19px; line-height: 1.5; font-weight: var(--w-medium); color: var(--fg-1); overflow: hidden; transition: opacity .4s ease, max-height .4s ease, margin .4s ease; margin: 0; max-width: 440px; }
+.js .sc-step p { opacity: 0; max-height: 0; margin: 0; }
+.sc-step.active .kicker { opacity: 1; }
+.sc-step.active h3 { opacity: 1; }
+.sc-step.active p { opacity: .62; max-height: 140px; margin: 18px 0 0; }
+/* fallback: if the observer never fires, show all step copy (no transition so
+   it commits even on engines that don't animate opacity) */
+.sc-stage.sc-fallback .sc-step .kicker,
+.sc-stage.sc-fallback .sc-step h3,
+.sc-stage.sc-fallback .sc-step p { transition: none; }
+.sc-stage.sc-fallback .sc-step .kicker,
+.sc-stage.sc-fallback .sc-step h3 { opacity: 1; }
+.sc-stage.sc-fallback .sc-step p { opacity: .62; max-height: 240px; margin: 18px 0 0; }
+
+.sc-phonewrap { position: sticky; top: calc(50vh - 290px); justify-self: end; }
+.sc-phone {
+  position: relative; width: 360px; height: 588px;
+  background: #fff; border: 8px solid #fff; border-radius: 50px;
+  box-shadow: 0 50px 90px -28px rgba(0,0,0,.34), var(--shadow-card);
+  overflow: hidden;
+}
+.sc-phone img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; opacity: 0; transition: opacity .5s ease; }
+.sc-phone img.show { opacity: 1; }
+.sc-dots { display: flex; flex-direction: column; gap: 10px; position: absolute; right: -28px; top: 50%; transform: translateY(-50%); }
+.sc-dots i { width: 8px; height: 8px; border-radius: 50%; background: rgba(0,0,0,.15); transition: background .3s, height .3s; }
+.sc-dots i.on { background: var(--fenn-blue); height: 22px; }
+
+/* ============================================================
+   TESTIMONIALS
+   ============================================================ */
+.testi { padding: 110px 0; background: var(--bg-app); }
+.testi-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 56px; }
+.tcard { background: var(--bg-surface); border-radius: 24px; padding: 30px; box-shadow: var(--shadow-card); display: flex; flex-direction: column; }
+.tcard .quote { font-size: 19px; line-height: 1.5; font-weight: var(--w-medium); letter-spacing: -.01em; margin: 0 0 26px; }
+.tcard .who { display: flex; align-items: center; gap: 12px; margin-top: auto; }
+.tcard .who img { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; }
+.tcard .who .nm { font-size: 16px; font-weight: var(--w-bold); }
+.tcard .who .rl { font-size: 14px; font-weight: var(--w-medium); opacity: .5; }
+.tcard .crew-tag { align-self: flex-start; font-size: 12px; font-weight: var(--w-bold); letter-spacing: var(--track-caps); padding: 6px 12px; border-radius: var(--r-pill); margin-bottom: 22px; }
+
+/* ============================================================
+   CTA + CONTACT + FOOTER
+   ============================================================ */
+.cta-band { background: linear-gradient(165deg, var(--fenn-blue-deep) 0%, var(--fenn-blue) 72%, #00a6ee 100%); color: #fff; padding: 110px 0; text-align: center; }
+.cta-band img.mascot { width: 116px; height: 130px; margin-bottom: 14px; }
+.cta-band h2 { font-size: clamp(36px, 5vw, 60px); line-height: 1.02; font-weight: var(--w-bold); letter-spacing: -.035em; margin: 0; }
+.cta-band p { font-size: clamp(18px, 2vw, 22px); font-weight: var(--w-medium); color: rgba(255,255,255,.85); margin: 20px 0 38px; }
+.cta-band .cta { display: inline-flex; align-items: center; gap: 18px; }
+.cta-band .free-pill { color: #fff; }
+
+.contact { padding: 100px 0; background: var(--bg-surface); text-align: center; }
+.contact h2 { font-size: clamp(30px, 3.6vw, 42px); font-weight: var(--w-bold); letter-spacing: -.03em; margin: 0; }
+.contact p { font-size: 19px; font-weight: var(--w-medium); opacity: .6; margin: 16px 0 28px; }
+.contact a.mail {
+  display: inline-flex; align-items: center; height: 52px; padding: 0 28px;
+  background: var(--bg-app); border-radius: var(--r-pill);
+  font-size: 17px; font-weight: var(--w-semibold); text-decoration: none;
+  box-shadow: var(--shadow-card);
+}
+
+footer { background: var(--bg-app); padding: 48px 0; border-top: 1px solid var(--line); }
+footer .wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 20px; }
+footer .brand span { font-size: 18px; }
+footer .brand img { width: 34px; height: 38px; }
+footer .flinks { display: flex; gap: 26px; }
+footer .flinks a { font-size: 15px; font-weight: var(--w-medium); text-decoration: none; opacity: .65; }
+footer .copy { font-size: 14px; font-weight: var(--w-medium); opacity: .4; width: 100%; }
+
+/* ============================================================
+   REVEAL ANIMATIONS
+   ============================================================ */
+.reveal { transition: opacity .7s cubic-bezier(.2,.7,.3,1), transform .7s cubic-bezier(.2,.7,.3,1); }
+.js .reveal { opacity: 0; transform: translateY(22px); }
+.js .reveal.in { opacity: 1; transform: none; }
+.reveal.d1 { transition-delay: .08s; }
+.reveal.d2 { transition-delay: .16s; }
+.reveal.d3 { transition-delay: .24s; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  html { scroll-behavior: auto; }
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 980px) {
+  :root { --gutter: 24px; }
+  .hero .wrap { grid-template-columns: 1fr; gap: 40px; }
+  .hero-phone { justify-self: start; }
+  .feat-grid, .how-grid, .testi-grid { grid-template-columns: 1fr; }
+  .sc-stage { grid-template-columns: 1fr; gap: 0; }
+  .sc-phonewrap { position: sticky; top: 76px; justify-self: center; margin-bottom: 24px; order: -1; }
+  .sc-phone { width: 240px; height: 392px; border-radius: 36px; border-width: 6px; }
+  .sc-dots { display: none; }
+  .sc-step { min-height: auto; padding: 26px 0; }
+  .sc-step h3, .sc-step .kicker { opacity: 1; }
+  .sc-step h3 { opacity: 1; }
+  .sc-step p { opacity: .62; max-height: none; margin: 16px 0 0; }
+  .nav-links a.link { display: none; }
+}
+@media (max-width: 560px) {
+  .hero h1 { font-size: 40px; }
+  #rotW { white-space: normal; }
+}

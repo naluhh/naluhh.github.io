@@ -1,0 +1,169 @@
+/* ============================================================
+   FENN — Design Foundations
+   Colors + Typography tokens
+   "A group chat with AI that turns plans into action."
+   Source of truth: Fenn __ Finca.fig (iOS app)
+   ============================================================ */
+
+:root {
+  /* ---------- BRAND / ACCENT ---------- */
+  /* The signature Fenn blue. Used as a vertical gradient on
+     primary buttons, "me" message bubbles, and active accents. */
+  --fenn-blue:            rgb(0, 180, 255);   /* #00B4FF — primary accent, "me" bubbles */
+  --fenn-blue-deep:       rgb(61, 134, 255);  /* #3D86FF — top of the button gradient   */
+  --fenn-blue-ink:        rgb(0, 155, 219);   /* #009BDB — pressed / map pins            */
+  --grad-blue: linear-gradient(180deg, var(--fenn-blue-deep) 0%, var(--fenn-blue) 100%);
+  --grad-blue-glow: 0px 5px 20px 0px rgba(80, 177, 249, 0.30); /* halo under blue buttons */
+
+  /* ---------- NEUTRALS (grayscale ladder) ---------- */
+  --ink:                  rgb(0, 0, 0);        /* #000000 — mascot stroke, icons, status bar */
+  --fg-1:                 rgb(51, 51, 51);     /* #333333 — primary text in bubbles/cards    */
+  --fg-2:                 rgba(0, 0, 0, 0.30); /* muted/secondary text, big headline title   */
+  --fg-3:                 rgba(0, 0, 0, 0.20); /* placeholder text in inputs                 */
+  --fg-on-blue:           rgb(255, 255, 255);  /* text on blue                               */
+  --fg-on-blue-2:         rgba(255, 255, 255, 0.60); /* metadata on blue bubble              */
+
+  --bg-app:               rgb(242, 242, 242);  /* #F2F2F2 — app canvas (everything sits on this) */
+  --bg-surface:           rgb(255, 255, 255);  /* #FFFFFF — cards, bubbles, fields, sheets    */
+  --bg-warm:              rgb(252, 251, 242);  /* #FCFBF2 — rare warm paper tint              */
+  --line:                 rgb(230, 230, 230);  /* #E6E6E6 — hairline strokes                 */
+  --line-soft:            rgba(0, 0, 0, 0.10); /* deleted-bubble outline, dividers           */
+  --stroke-on-dark:       rgba(255, 255, 255, 0.20); /* strokes over photos/dark             */
+
+  /* ---------- SEMANTIC ---------- */
+  --notify:               rgb(255, 61, 87);    /* #FF3D57 — unread pill, badges, alerts       */
+  --today:                rgb(255, 56, 60);    /* #FF383C — "today" calendar marker           */
+  --success:              rgb(28, 160, 13);    /* #1CA00D — confirmed / park labels on map     */
+  --highlight:            rgb(255, 250, 99);   /* #FFFA63 — text highlight (search matches)    */
+
+  /* ---------- USERNAME RAINBOW ----------
+     Each member of a group chat is assigned one hue. 14 stops,
+     looped by member index. Bold 12px caps above each bubble. */
+  --u-01: rgb(255, 61, 87);    /* pink-red   */
+  --u-02: rgb(201, 59, 38);    /* brick      */
+  --u-03: rgb(255, 125, 74);   /* orange     */
+  --u-04: rgb(255, 156, 71);   /* amber      */
+  --u-05: rgb(255, 187, 65);   /* gold       */
+  --u-06: rgb(166, 102, 50);   /* brown      */
+  --u-07: rgb(0, 195, 2);      /* green      */
+  --u-08: rgb(0, 169, 98);     /* emerald    */
+  --u-09: rgb(0, 192, 160);    /* teal       */
+  --u-10: rgb(0, 155, 219);    /* sky        */
+  --u-11: rgb(61, 134, 255);   /* blue       */
+  --u-12: rgb(103, 92, 255);   /* indigo     */
+  --u-13: rgb(194, 105, 255);  /* purple     */
+  --u-14: rgb(255, 74, 151);   /* magenta    */
+
+  /* ---------- TYPOGRAPHY ----------
+     Fenn is an iOS app — the type system IS Apple's SF Pro.
+     We use the system font stack so Apple devices render true SF Pro;
+     Inter is the cross-platform fallback (metrics are close). */
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text",
+               "SF Pro", "Inter", "Helvetica Neue", Arial, sans-serif;
+  --font-rounded: "SF Pro Rounded", var(--font-sans);
+
+  /* Weights (SF Pro): Regular 400 · Medium 500 · Semibold 600 · Bold 700 · Heavy 800 */
+  --w-regular: 400;
+  --w-medium: 500;
+  --w-semibold: 600;
+  --w-bold: 700;
+  --w-heavy: 800;
+
+  /* Tight optical tracking used throughout (-2%). */
+  --track-tight: -0.02em;
+  --track-caps: -0.23px;
+
+  /* ---------- RADII ---------- */
+  --r-bubble: 16px;   /* message bubbles, cards, fields, buttons */
+  --r-pill: 100px;    /* search bar, pills, "Ask Fenn" capsule   */
+  --r-icon: 12px;     /* small icon buttons                       */
+  --r-sheet: 28px;    /* bottom sheets                            */
+  --r-phone: 64px;    /* device corner radius                     */
+
+  /* ---------- ELEVATION ----------
+     Fenn's surfaces float on a flat gray canvas. The signature is a
+     soft diffuse shadow PLUS a 1px inset white top-highlight that
+     gives every surface a subtle "lit from above" edge. */
+  --shadow-card:   0px 0px 16px 0px rgba(0,0,0,0.05), inset 0px 1px 0px 0px rgba(255,255,255,0.70);
+  --shadow-field:  0px 7.5px 15px 0px rgba(0,0,0,0.05), inset 0px 1px 0px 0px rgba(255,255,255,0.70);
+  --shadow-pop:    0px 8px 24px 0px rgba(0,0,0,0.12);
+  --shadow-mascot: 0px 11.6px 23.3px 0px rgba(0,0,0,0.10);
+  --shadow-blue:   var(--grad-blue-glow);
+
+  /* ---------- SPACING (4pt grid) ---------- */
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 24px; --s-6: 28px; --s-7: 32px; --s-8: 40px;
+}
+
+/* ============================================================
+   SEMANTIC TYPE CLASSES
+   Sizes mirror the iOS specimens in the Figma library.
+   ============================================================ */
+.fenn-display {                 /* Home headline — "On the go" */
+  font-family: var(--font-sans);
+  font-weight: var(--w-medium);
+  font-size: 40px; line-height: 40px;
+  letter-spacing: var(--track-tight);
+  color: var(--fg-2);
+}
+.fenn-display-sub {             /* "For 10min" under the headline */
+  font-family: var(--font-sans);
+  font-weight: var(--w-bold);
+  font-size: 24px; line-height: 30px;
+  letter-spacing: var(--track-tight);
+  color: var(--fg-1);
+}
+.fenn-h1 {                      /* Onboarding questions, big titles */
+  font-family: var(--font-sans);
+  font-weight: var(--w-bold);
+  font-size: 28px; line-height: 34px;
+  letter-spacing: var(--track-tight);
+  color: var(--fg-1);
+}
+.fenn-h2 {
+  font-family: var(--font-sans);
+  font-weight: var(--w-bold);
+  font-size: 20px; line-height: 24px;
+  letter-spacing: var(--track-tight);
+  color: var(--fg-1);
+}
+.fenn-title {                   /* Header name, list titles (Semibold 17) */
+  font-family: var(--font-sans);
+  font-weight: var(--w-semibold);
+  font-size: 17px; line-height: 22px;
+  letter-spacing: var(--track-tight);
+  color: var(--fg-1);
+}
+.fenn-body {                    /* Message text — the workhorse (Medium 16) */
+  font-family: var(--font-sans);
+  font-weight: var(--w-medium);
+  font-size: 16px; line-height: 19px;
+  letter-spacing: var(--track-tight);
+  color: var(--fg-1);
+}
+.fenn-subhead {                 /* Secondary list line (Regular 15) */
+  font-family: var(--font-sans);
+  font-weight: var(--w-regular);
+  font-size: 15px; line-height: 20px;
+  letter-spacing: var(--track-tight);
+  color: var(--fg-2);
+}
+.fenn-label {                   /* Button labels, badges (Bold 12) */
+  font-family: var(--font-sans);
+  font-weight: var(--w-bold);
+  font-size: 12px; line-height: 14px;
+  letter-spacing: var(--track-tight);
+}
+.fenn-username {                /* Per-member name above a bubble (Bold 12) */
+  font-family: var(--font-sans);
+  font-weight: var(--w-bold);
+  font-size: 12px; line-height: 14px;
+  letter-spacing: var(--track-caps);
+}
+.fenn-caption {                 /* Timestamps, metadata (Medium 11) */
+  font-family: var(--font-sans);
+  font-weight: var(--w-medium);
+  font-size: 11px; line-height: 13px;
+  letter-spacing: var(--track-tight);
+  color: var(--fg-2);
+}
