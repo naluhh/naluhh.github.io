@@ -261,6 +261,7 @@ footer .copy { font-size: 14px; font-weight: var(--w-medium); opacity: .4; width
   .hero .wrap { grid-template-columns: 1fr; gap: 40px; }
   .hero-phone { justify-self: start; }
   .feat-grid, .how-grid, .testi-grid { grid-template-columns: 1fr; }
+  .showcase .head-center { display: none; }
   .sc-stage { grid-template-columns: 1fr; gap: 0; margin-top: 8px; }
   .sc-phonewrap { display: none; }
   .sc-steps { gap: 0; }
