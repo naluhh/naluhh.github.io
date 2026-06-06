@@ -30,7 +30,7 @@
       ['book club', 'var(--u-13)'],
       ['running club', 'var(--u-03)'],
       ['ski trip', 'var(--u-11)'],
-      ['climbing crew', 'var(--u-08)']
+      ['climb crew', 'var(--u-08)']
     ];
     var i = 0;
     var rot = document.getElementById('rotW');
