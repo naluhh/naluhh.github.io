@@ -24,7 +24,7 @@
   ready(function () {
     // ---- rotating crew word ----
     var words = [
-      ['pickle crew', 'var(--u-10)'],
+      ['room parent', 'var(--u-10)'],
       ['busy parent', 'var(--u-14)'],
       ['soccer team', 'var(--u-07)'],
       ['book club', 'var(--u-13)'],
