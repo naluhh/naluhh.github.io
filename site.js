@@ -25,7 +25,7 @@
     // ---- rotating crew word ----
     var words = [
       ['pickle crew', 'var(--u-10)'],
-      ['school mom', 'var(--u-14)'],
+      ['busy parent', 'var(--u-14)'],
       ['soccer team', 'var(--u-07)'],
       ['book club', 'var(--u-13)'],
       ['running club', 'var(--u-03)'],
