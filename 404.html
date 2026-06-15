@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fenn</title>
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<script>
+  // Universal-link fallback: a recipient tapped https://fenn.chat/i/<uid>
+  // but Fenn isn't installed (an installed app intercepts /i/ before this page
+  // ever loads). Send them to the App Store. Other 404s fall through to the
+  // simple not-found message below.
+  if (location.pathname.indexOf('/i/') === 0) {
+    location.replace('https://apps.apple.com/app/id6761315757');
+  }
+</script>
+<style>
+  body { font-family: -apple-system, system-ui, sans-serif; text-align: center; padding: 4rem 1.5rem; color: #18191c; }
+  a { color: #009bdb; }
+</style>
+</head>
+<body>
+  <p>Page not found — visit <a href="/">fenn.chat</a>.</p>
+</body>
+</html>
