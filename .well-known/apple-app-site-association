@@ -4,7 +4,7 @@
     "details": [
       {
         "appID": "45DB4NSQF5.com.fenn.Fenn",
-        "paths": ["/i/*"]
+        "paths": ["/i/", "/i/*"]
       }
     ]
   }
