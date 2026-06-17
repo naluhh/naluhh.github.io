@@ -24,13 +24,13 @@
   ready(function () {
     // ---- rotating crew word ----
     var words = [
-      ['room parent', 'var(--u-10)'],
-      ['busy parent', 'var(--u-14)'],
+      ['pickle crew', 'var(--u-10)'],
+      ['school mom', 'var(--u-14)'],
       ['soccer team', 'var(--u-07)'],
       ['book club', 'var(--u-13)'],
       ['running club', 'var(--u-03)'],
       ['ski trip', 'var(--u-11)'],
-      ['climb crew', 'var(--u-08)']
+      ['climbing crew', 'var(--u-08)']
     ];
     var i = 0;
     var rot = document.getElementById('rotW');

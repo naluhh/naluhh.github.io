@@ -93,7 +93,7 @@ section { position: relative; }
   padding: 80px 0 96px;
   overflow: hidden;
 }
-.hero .wrap { display: grid; grid-template-columns: minmax(auto, 560px) 300px; gap: 56px; align-items: center; justify-content: center; }
+.hero .wrap { display: grid; grid-template-columns: minmax(auto, 500px) minmax(340px, 430px); gap: 56px; align-items: center; justify-content: center; }
 .hero h1 {
   font-size: clamp(42px, 5.6vw, 70px); line-height: 1.0;
   font-weight: var(--w-bold); letter-spacing: -.035em; margin: 18px 0 0;
@@ -106,13 +106,55 @@ section { position: relative; }
   margin: 26px 0 36px; max-width: 480px;
 }
 .hero .cta { display: flex; align-items: center; gap: 18px; }
-.hero-phone {
-  justify-self: end;
-  background: #fff; border: 7px solid #fff; border-radius: 46px;
-  overflow: hidden; width: 296px; aspect-ratio: 35 / 76;
-  box-shadow: 0 44px 80px -24px rgba(0,0,0,.32), var(--shadow-card);
+/* ===== Hero conversation (borderless, on the page) ===== */
+.hero-convo {
+  justify-self: center;
+  position: relative;
+  width: 100%; max-width: 430px; height: 460px; margin: 0 auto;
 }
-.hero-phone img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.hero-convo .chat { position: absolute; inset: 0; display: flex; flex-direction: column; }
+.chat-body { position: relative; flex: 1 1 auto; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 64px, #000 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 64px, #000 100%); }
+.chat-track { position: absolute; left: 4px; right: 4px; top: 0; display: flex; flex-direction: column; gap: 14px; transition: transform .5s cubic-bezier(.2,.7,.3,1); will-change: transform; }
+
+.chat-track .msg { display: flex; flex-direction: column; align-items: flex-start; max-width: 100%; }
+.chat-track .msg .uname { font-size: 12px; font-weight: var(--w-bold); letter-spacing: .02em; margin: 0 0 5px 16px; }
+.chat-track .bubble { max-width: 80%; padding: 12px 16px; border-radius: 21px; border-bottom-left-radius: 7px;
+  background: #fff; color: var(--fg-1); font-size: 16px; font-weight: var(--w-medium); line-height: 1.4; letter-spacing: var(--track-tight);
+  box-shadow: 0 2px 8px rgba(0,0,0,.07), inset 0 1px 0 rgba(255,255,255,.7); }
+
+.chat-track .frow { display: flex; gap: 10px; align-items: flex-end; max-width: 90%; }
+.chat-track .bavatar { width: 40px; height: 40px; flex: none; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.1), 0 0 0 2px rgba(0,180,255,.4); align-self: flex-end; }
+.chat-track .bavatar img { width: 24px; height: 25px; }
+.chat-track .fcol { display: flex; flex-direction: column; }
+.chat-track .fcol .uname { color: var(--fenn-blue); }
+
+/* Fenn posts — tinted + lifted so they read as the assistant, not just another sender */
+.chat-track .msg.fenn .bubble { background: #EAF6FF; box-shadow: 0 10px 24px -6px rgba(0,150,255,.30), inset 0 1px 0 rgba(255,255,255,.8); }
+
+.chat-track .ev { display: flex; align-items: center; gap: 11px; margin-top: 9px; padding: 11px; background: #fff; border-radius: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.08), inset 0 1px 0 rgba(255,255,255,.7); }
+.chat-track .ev .evi { width: 40px; height: 40px; flex: none; border-radius: 11px; background: var(--grad-blue); display: grid; place-items: center; box-shadow: var(--grad-blue-glow); }
+.chat-track .ev .evi img { width: 21px; height: 21px; }
+.chat-track .ev .evt { font-size: 15px; font-weight: var(--w-bold); color: var(--fg-1); line-height: 1.2; }
+.chat-track .ev .evs { font-size: 13px; font-weight: var(--w-medium); color: var(--fg-1); opacity: .5; margin-top: 2px; }
+
+.chat-track .tbubble { display: flex; align-items: flex-end; gap: 10px; }
+.chat-track .tbubble .dots { display: flex; gap: 4px; padding: 14px 17px; background: #fff; border-radius: 21px; border-bottom-left-radius: 7px; box-shadow: 0 2px 8px rgba(0,0,0,.07), inset 0 1px 0 rgba(255,255,255,.7); }
+.chat-track .tbubble .dots span { width: 7px; height: 7px; border-radius: 50%; background: var(--fg-1); opacity: .3; animation: tdot 1.1s infinite ease-in-out; }
+.chat-track .tbubble .dots span:nth-child(2) { animation-delay: .18s; }
+.chat-track .tbubble .dots span:nth-child(3) { animation-delay: .36s; }
+@keyframes tdot { 0%,60%,100% { transform: translateY(0); opacity: .3; } 30% { transform: translateY(-3px); opacity: .75; } }
+
+/* enter states + armed hide — only when JS + motion are on, so no-JS/reduced-motion shows the full thread */
+@media (prefers-reduced-motion: no-preference) {
+  .js .chat-track .msg { opacity: 0; transform: translateY(8px); }
+  .js .chat-track.armed .msg:not(.vis) { display: none; }
+}
+.js .chat-track .msg.vis { display: flex; }
+.js .chat-track .msg.show { opacity: 1; transform: none; transition: opacity .34s ease, transform .34s ease; }
+.chat-track .tbubble { opacity: 0; transform: translateY(8px); }
+.chat-track .tbubble.show { opacity: 1; transform: none; transition: opacity .3s ease, transform .3s ease; }
 
 /* crew chips strip */
 .crew-strip { background: var(--bg-surface); padding: 28px 0; border-bottom: 1px solid var(--line); }
@@ -259,9 +301,8 @@ footer .copy { font-size: 14px; font-weight: var(--w-medium); opacity: .4; width
 @media (max-width: 980px) {
   :root { --gutter: 24px; }
   .hero .wrap { grid-template-columns: 1fr; gap: 40px; }
-  .hero-phone { justify-self: start; }
+  .hero-convo { justify-self: center; max-width: 440px; height: 440px; }
   .feat-grid, .how-grid, .testi-grid { grid-template-columns: 1fr; }
-  .showcase .head-center h2 { display: none; }
   .sc-stage { grid-template-columns: 1fr; gap: 0; margin-top: 8px; }
   .sc-phonewrap { display: none; }
   .sc-steps { gap: 0; }
