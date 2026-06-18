@@ -125,8 +125,8 @@ section { position: relative; }
   box-shadow: 0 2px 8px rgba(0,0,0,.07), inset 0 1px 0 rgba(255,255,255,.7); }
 
 .chat-track .frow { display: flex; gap: 10px; align-items: flex-end; max-width: 90%; }
-.chat-track .bavatar { width: 40px; height: 40px; flex: none; border-radius: 50%; background: #fff; display: grid; place-items: center; box-shadow: 0 2px 6px rgba(0,0,0,.1), 0 0 0 2px rgba(0,180,255,.4); align-self: flex-end; }
-.chat-track .bavatar img { width: 24px; height: 25px; }
+.chat-track .bavatar { width: 40px; height: 40px; flex: none; align-self: flex-end; }
+.chat-track .bavatar img { width: 40px; height: 40px; }
 .chat-track .fcol { display: flex; flex-direction: column; }
 .chat-track .fcol .uname { color: var(--fenn-blue); }
 
