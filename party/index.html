@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Fenn — Host a party</title>
+<meta name="description" content="Round up 10 friends on Fenn to plan your night out (or in) together. Sign up to host and we'll reach out with the deal." />
+
+<link rel="canonical" href="https://fenn.chat/party" />
+<meta name="theme-color" content="#00B4FF" />
+
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=3" />
+<link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png?v=3" />
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png?v=3" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Fenn" />
+<meta property="og:url" content="https://fenn.chat/party" />
+<meta property="og:title" content="Fenn — Host a party" />
+<meta property="og:description" content="Round up 10 friends on Fenn to plan your night out (or in) together. Sign up to host and we'll reach out with the deal." />
+<meta property="og:image" content="https://fenn.chat/assets/og-image.png?v=3" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Fenn — Host a party" />
+<meta name="twitter:description" content="Round up 10 friends on Fenn to plan your night together." />
+<meta name="twitter:image" content="https://fenn.chat/assets/og-image.png?v=3" />
+
+<link rel="stylesheet" href="/assets/colors_and_type.css" />
+<link rel="stylesheet" href="/site.css" />
+<link rel="stylesheet" href="/party/party.css" />
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav" id="top">
+  <div class="wrap">
+    <a class="brand" href="/">
+      <img src="/assets/bulle/bulle-logo.svg" alt="Fenn" />
+      <span>Fenn</span>
+    </a>
+    <nav class="nav-links">
+      <a class="link" href="/">Home</a>
+      <a class="link" href="#how">How it works</a>
+      <a class="btn-getapp" href="#signup">Host a party</a>
+    </nav>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero hero-party" id="signup">
+  <div class="wrap">
+    <div>
+      <div class="confetti" aria-hidden="true">
+        <i style="background:var(--u-03)"></i>
+        <i style="background:var(--u-07)"></i>
+        <i style="background:var(--u-10)"></i>
+        <i style="background:var(--u-13)"></i>
+        <i style="background:var(--u-14)"></i>
+      </div>
+      <div class="eyebrow">The Fenn host deal</div>
+      <h1>Throw the party.<br />We'll light<br />it up.</h1>
+      <p class="sub">Round up 10 friends on Fenn to plan your night out — or in — together. One group chat where Fenn helps you make a plan, mix the details, and get together on the day.</p>
+      <div class="offer-line">
+        <span class="tag">The deal</span>
+        Get 10 friends on Fenn — we'll set you up
+      </div>
+    </div>
+
+    <form class="signup-card" id="hostForm" novalidate>
+      <div class="form-body">
+        <div class="sc-top">
+          <h3>Host a party</h3>
+          <p>Sign up and we'll reach out to schedule a quick chat.</p>
+        </div>
+        <div class="field">
+          <label for="f-name">Your name</label>
+          <input id="f-name" name="name" type="text" placeholder="Alex Rivera" autocomplete="name" required />
+        </div>
+        <div class="field">
+          <label for="f-email">Email</label>
+          <input id="f-email" name="email" type="email" placeholder="you@email.com" autocomplete="email" required />
+        </div>
+        <div class="field">
+          <label for="f-phone">Mobile</label>
+          <input id="f-phone" name="phone" type="tel" placeholder="(555) 123-4567" autocomplete="tel" required />
+        </div>
+        <div class="field">
+          <label for="f-city">City</label>
+          <input id="f-city" name="city" type="text" placeholder="Brooklyn, NY" autocomplete="address-level2" required />
+        </div>
+        <div class="field">
+          <label>What kind of night?</label>
+          <div class="seg">
+            <label><input type="radio" name="vibe" value="Night out" checked />Night out</label>
+            <label><input type="radio" name="vibe" value="Night in" />Night in</label>
+          </div>
+        </div>
+        <button class="btn-primary" type="submit">Request my host deal</button>
+        <p class="fineprint">Takes a minute. No commitment — we'll explain the deal on a quick call.</p>
+      </div>
+      <div class="success">
+        <div class="check"><svg viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3 id="successName">You're on the list!</h3>
+        <p>We'll reach out shortly to schedule a quick chat and walk you through the deal. Start rounding up your 10.</p>
+      </div>
+    </form>
+  </div>
+</section>
+
+<!-- ============ THE DEAL (steps) ============ -->
+<section class="deal" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">How the deal works</div>
+      <h2>Three steps to a<br />better night out</h2>
+      <p>A special deal for hosts who bring their crew onto Fenn. Here's how it goes.</p>
+    </div>
+    <div class="how-grid">
+      <div class="step reveal d1">
+        <div class="num">1</div>
+        <h3>Sign up to host</h3>
+        <p>Tell us about your party. Takes a minute — no commitment up front.</p>
+      </div>
+      <div class="step reveal d2">
+        <div class="num">2</div>
+        <h3>Rally 10 friends</h3>
+        <p>Get 10 friends to join you on Fenn to plan and coordinate the night together.</p>
+      </div>
+      <div class="step reveal d3">
+        <div class="num">3</div>
+        <h3>We'll reach out</h3>
+        <p>The team schedules a quick chat to walk you through the terms of the deal.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PARTY MOMENT (chat demo) ============ -->
+<section class="moment">
+  <div class="wrap">
+    <div class="reveal">
+      <div class="eyebrow">See it in action</div>
+      <h2>Your party, minus the group-text chaos</h2>
+      <p class="lead">Watch Fenn turn a flaky thread into a plan everyone actually shows up to.</p>
+    </div>
+    <div class="hero-convo" id="heroPhone">
+      <div class="chat">
+        <div class="chat-body">
+          <div class="chat-track">
+            <div class="msg them" data-pre="500" data-hold="1100"><div class="uname" style="color:var(--u-14)">Maya</div><div class="bubble">friday at yours still on?? 🎉</div></div>
+            <div class="msg them" data-pre="850" data-hold="1100"><div class="uname" style="color:var(--u-07)">Devon</div><div class="bubble">i'm in — what should i bring</div></div>
+            <div class="msg fenn" data-pre="1200" data-hold="1900"><div class="frow"><div class="bavatar"><img src="/assets/bulle/bulle-logo.svg" alt="Fenn" /></div><div class="fcol"><div class="uname">Fenn</div><div class="bubble">Added it to everyone's calendar<div class="ev"><div class="evi"><img src="/assets/icons/white/calendar.svg" alt="" /></div><div><div class="evt">House party</div><div class="evs">Friday, 8:00 PM · Your place</div></div></div></div></div></div></div>
+            <div class="msg them" data-pre="750" data-hold="1200"><div class="uname" style="color:var(--u-03)">Priya</div><div class="bubble">i've got snacks + ice 🧊</div></div>
+            <div class="msg fenn" data-pre="1500" data-hold="2600"><div class="frow"><div class="bavatar"><img src="/assets/bulle/bulle-logo.svg" alt="Fenn" /></div><div class="fcol"><div class="uname">Fenn</div><div class="bubble">Got it — I'll keep the list. Drinks: Devon. Snacks + ice: Priya. Playlist: you. I'll nudge everyone Friday afternoon.</div></div></div></div>
+            <div class="msg them" data-pre="700" data-hold="2800"><div class="uname" style="color:var(--u-09)">Sam</div><div class="bubble">most organized we've ever been honestly</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PERKS ============ -->
+<section class="features">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <div class="eyebrow">Why host on Fenn</div>
+      <h2>You bring the people.<br />Fenn brings the order.</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat-card reveal d1">
+        <div class="ficon"><img src="/assets/icons/white/checklist.svg" alt="" /></div>
+        <h3>One thread for the whole night</h3>
+        <p>You and your crew in a single Fenn chat where the plan actually comes together — no scattered texts.</p>
+      </div>
+      <div class="feat-card reveal d2">
+        <div class="ficon"><img src="/assets/icons/white/calendar.svg" alt="" /></div>
+        <h3>Fenn does the planning</h3>
+        <p>It books the spot, splits who-brings-what, and reminds everyone before the day so nobody flakes.</p>
+      </div>
+      <div class="feat-card reveal d3">
+        <div class="ficon"><img src="/assets/icons/white/phone.svg" alt="" /></div>
+        <h3>A deal for hosts</h3>
+        <p>Round up your 10 and we'll set you up — we'll share the terms on a quick call.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FINAL CTA ============ -->
+<section class="party-cta">
+  <div class="wrap">
+    <div class="confetti" aria-hidden="true">
+      <i style="background:var(--u-03)"></i>
+      <i style="background:var(--u-07)"></i>
+      <i style="background:var(--u-10)"></i>
+      <i style="background:var(--u-13)"></i>
+      <i style="background:var(--u-14)"></i>
+    </div>
+    <h2>Ready to host?</h2>
+    <p>Sign up in a minute. We'll handle the rest.</p>
+    <a class="btn-light" href="#signup">Sign up to host</a>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap">
+    <a class="brand" href="/">
+      <img src="/assets/bulle/bulle-logo.svg" alt="Fenn" />
+      <span>Fenn</span>
+    </a>
+    <nav class="flinks">
+      <a href="/">Home</a>
+      <a href="#how">How it works</a>
+      <a href="#signup">Host a party</a>
+      <a href="mailto:c+contact@fenn.chat">Contact</a>
+    </nav>
+    <div class="copy">© 2026 Fenn · Chat that thinks</div>
+  </div>
+</footer>
+
+<script src="/site.js"></script>
+<script src="/hero-chat.js"></script>
+<script src="/party/party.js"></script>
+</body>
+</html>

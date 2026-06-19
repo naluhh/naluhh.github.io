@@ -1,0 +1,111 @@
+/* ============================================================
+   FENN — Party host landing (extends site.css)
+   ============================================================ */
+
+/* hero: text + signup card */
+.hero.hero-party .wrap { grid-template-columns: minmax(auto, 560px) minmax(360px, 430px); align-items: center; }
+.hero.hero-party h1 { margin-top: 14px; }
+.hero.hero-party .sub { margin-bottom: 24px; }
+
+/* confetti dots — the username rainbow used sparingly as a party motif */
+.confetti { display: flex; gap: 8px; align-items: center; margin-bottom: 4px; }
+.confetti i { width: 11px; height: 11px; border-radius: 50%; display: block; }
+
+/* offer line under hero copy */
+.offer-line {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--bg-surface); border-radius: var(--r-pill);
+  padding: 9px 16px 9px 12px; box-shadow: var(--shadow-card);
+  font-size: 15px; font-weight: var(--w-semibold); letter-spacing: var(--track-tight);
+}
+.offer-line .tag {
+  font-size: 12px; font-weight: var(--w-bold); letter-spacing: var(--track-caps);
+  text-transform: uppercase; color: #fff; background: var(--grad-blue);
+  padding: 5px 9px; border-radius: 7px; box-shadow: var(--grad-blue-glow);
+}
+
+/* ---------- signup card ---------- */
+.signup-card {
+  background: var(--bg-surface); border-radius: 24px; padding: 28px;
+  box-shadow: var(--shadow-card); justify-self: end; width: 100%;
+}
+.signup-card .sc-top { margin-bottom: 20px; }
+.signup-card .sc-top h3 { font-size: 23px; font-weight: var(--w-bold); letter-spacing: -.02em; margin: 0; }
+.signup-card .sc-top p { font-size: 15px; font-weight: var(--w-medium); opacity: .55; margin: 6px 0 0; }
+
+.field { display: flex; flex-direction: column; gap: 7px; margin-bottom: 14px; }
+.field label { font-size: 14px; font-weight: var(--w-bold); letter-spacing: var(--track-tight); }
+.field input {
+  height: 48px; padding: 0 15px; border: none; border-radius: 14px;
+  background: var(--bg-app); color: var(--fg-1);
+  font-family: var(--font-sans); font-size: 16px; font-weight: var(--w-medium);
+  box-shadow: inset 0 0 0 1px var(--line); outline: none;
+  transition: box-shadow .15s ease;
+}
+.field input::placeholder { color: var(--fg-1); opacity: .32; }
+.field input:focus { box-shadow: inset 0 0 0 2px var(--fenn-blue); }
+
+/* segmented control */
+.seg { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.seg label {
+  position: relative; display: flex; align-items: center; justify-content: center;
+  height: 46px; border-radius: 13px; background: var(--bg-app);
+  box-shadow: inset 0 0 0 1px var(--line);
+  font-size: 15px; font-weight: var(--w-semibold); letter-spacing: var(--track-tight);
+  cursor: pointer; transition: box-shadow .15s ease, color .15s ease; user-select: none;
+}
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label:has(input:checked) { box-shadow: inset 0 0 0 2px var(--fenn-blue); color: var(--fenn-blue); }
+
+.btn-primary {
+  width: 100%; height: 52px; margin-top: 8px; border: none; cursor: pointer;
+  border-radius: var(--r-pill); background: var(--grad-blue); color: #fff;
+  font-family: var(--font-sans); font-size: 17px; font-weight: var(--w-semibold);
+  letter-spacing: var(--track-tight); box-shadow: var(--grad-blue-glow);
+  transition: transform .15s ease, filter .15s ease;
+}
+.btn-primary:hover { transform: translateY(-1px); filter: brightness(1.03); }
+.btn-primary:active { transform: translateY(0); filter: brightness(.96); }
+.btn-primary:disabled { opacity: .65; cursor: not-allowed; transform: none; }
+
+.fineprint { font-size: 13px; font-weight: var(--w-medium); opacity: .5; margin: 14px 0 0; line-height: 1.45; text-align: center; }
+
+/* success state */
+.signup-card.done { text-align: center; padding: 44px 28px; }
+.signup-card .success { display: none; flex-direction: column; align-items: center; }
+.signup-card.done .form-body { display: none; }
+.signup-card.done .success { display: flex; }
+.success .check { width: 64px; height: 64px; border-radius: 50%; background: var(--grad-blue); display: grid; place-items: center; box-shadow: var(--grad-blue-glow); margin-bottom: 20px; }
+.success .check svg { width: 30px; height: 30px; stroke: #fff; stroke-width: 3; fill: none; }
+.success h3 { font-size: 24px; font-weight: var(--w-bold); letter-spacing: -.02em; margin: 0 0 10px; }
+.success p { font-size: 16px; font-weight: var(--w-medium); opacity: .6; margin: 0; line-height: 1.5; max-width: 320px; }
+
+/* ---------- the deal (numbered steps reuse .how) ---------- */
+.deal { padding: 110px 0; background: var(--bg-surface); }
+
+/* ---------- party moment (chat demo) ---------- */
+.moment { padding: 100px 0; background: var(--bg-app); overflow: hidden; }
+.moment .wrap { display: grid; grid-template-columns: minmax(auto, 480px) minmax(360px, 430px); gap: 64px; align-items: center; }
+.moment h2 { font-size: clamp(32px, 4.2vw, 48px); line-height: 1.05; font-weight: var(--w-bold); letter-spacing: -.03em; margin: 16px 0 0; }
+.moment p.lead { font-size: 20px; line-height: 1.5; font-weight: var(--w-medium); opacity: .6; margin: 20px 0 0; max-width: 420px; }
+
+/* ---------- final CTA ---------- */
+.party-cta { background: linear-gradient(165deg, var(--fenn-blue-deep) 0%, var(--fenn-blue) 72%, #00a6ee 100%); color: #fff; padding: 104px 0; text-align: center; }
+.party-cta .confetti { justify-content: center; margin-bottom: 22px; }
+.party-cta .confetti i { box-shadow: 0 0 0 3px rgba(255,255,255,.18); }
+.party-cta h2 { font-size: clamp(34px, 4.6vw, 56px); line-height: 1.03; font-weight: var(--w-bold); letter-spacing: -.035em; margin: 0; }
+.party-cta p { font-size: clamp(17px, 2vw, 21px); font-weight: var(--w-medium); color: rgba(255,255,255,.85); margin: 18px 0 34px; }
+.party-cta .btn-light {
+  display: inline-flex; align-items: center; height: 56px; padding: 0 32px;
+  background: #fff; color: var(--fenn-blue); border-radius: var(--r-pill);
+  font-size: 18px; font-weight: var(--w-semibold); letter-spacing: var(--track-tight);
+  text-decoration: none; box-shadow: 0 14px 30px rgba(0,0,0,.18);
+  transition: transform .15s ease;
+}
+.party-cta .btn-light:hover { transform: translateY(-2px); }
+
+@media (max-width: 980px) {
+  .hero.hero-party .wrap { grid-template-columns: 1fr; }
+  .signup-card { justify-self: stretch; max-width: 460px; }
+  .moment .wrap { grid-template-columns: 1fr; gap: 36px; }
+}
