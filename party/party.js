@@ -3,7 +3,7 @@
   var form = document.getElementById('hostForm');
   if (!form) return;
 
-  var API = 'https://askfenn.to/api/host-signup';
+  var API = 'https://www.askfenn.to/api/host-signup';
 
   function setError(el) { el.style.boxShadow = 'inset 0 0 0 2px var(--notify)'; }
   function clearError(el) { el.style.boxShadow = ''; }
