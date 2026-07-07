@@ -10,8 +10,8 @@
 <meta name="theme-color" content="#BADDEB" />
 
 <!-- Icons -->
-<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=3" />
-<link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png?v=3" />
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=4" />
+<link rel="icon" type="image/png" sizes="512x512" href="/assets/favicon-512.png?v=4" />
 <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png?v=3" />
 
 <!-- Open Graph -->
@@ -133,16 +133,16 @@
   .btn-app:active { transform: scale(0.96); }
 
   /* ---------- Column ---------- */
-  main { position: relative; z-index: 3; max-width: var(--col); margin: 0 auto; padding: 0 20px; }
+  main { position: relative; z-index: 3; padding: 0 20px; }
 
-  .kicker { text-align: center; padding: 56px 12px 8px; }
+  .kicker { text-align: center; padding: clamp(40px, 5vw, 88px) 20px clamp(10px, 1.5vw, 28px); }
   /* hero intro: headline starts inside a white bubble that pops once, leaving it free on the sky */
-  .hero-pop { position: relative; display: inline-block; padding: 22px 32px; }
+  .hero-pop { position: relative; display: inline-block; padding: clamp(14px, 2.2vw, 32px) clamp(18px, 3vw, 40px); }
   .hero-bubble { position: absolute; inset: 0; z-index: 0; background: var(--white); border-radius: 28px; box-shadow: var(--bubble-shadow); }
   .hero-burst { position: absolute; left: 50%; top: 50%; width: 118%; z-index: 0; pointer-events: none; opacity: 0;
                 transform: translate(-50%,-50%) scale(.7); }
-  .hero-h { position: relative; z-index: 1; font-size: clamp(34px, 7vw, 44px); font-weight: 700; letter-spacing: -0.035em; line-height: 1.12; color: var(--ink); }
-  .hero-sub { font-size: 16px; color: var(--label); letter-spacing: -0.01em; margin: 10px auto 0; max-width: 430px; opacity: 0; }
+  .hero-h { position: relative; z-index: 1; font-size: clamp(44px, 5vw, 112px); font-weight: 700; letter-spacing: -0.04em; line-height: 1.06; color: var(--ink); }
+  .hero-sub { font-size: clamp(16px, 1.2vw, 21px); color: var(--label); letter-spacing: -0.01em; margin: clamp(10px, 0.8vw, 20px) auto 0; max-width: clamp(380px, 44vw, 680px); opacity: 0; }
   /* fixed ~0.8s pop sequence, fired once by JS (first scroll intent or 2.5s) */
   .kicker.popped .hero-bubble { animation: heroPop .34s cubic-bezier(.55,0,.65,.35) forwards; }
   .kicker.popped .hero-burst { animation: heroBurst .5s cubic-bezier(.2,.7,.3,1) .05s forwards; }
@@ -161,34 +161,34 @@
   }
 
   /* the word "bubble" rendered as an actual chat bubble */
-  .word-bubble { position: relative; display: inline-block; padding: 4px 22px;
+  .word-bubble { position: relative; display: inline-block; padding: 0.09em 0.5em;
                  background: var(--white); color: var(--ink);
-                 border-radius: 999px 999px 999px 6px;
-                 box-shadow: 0 4px 14px rgba(43,74,92,0.16);
+                 border-radius: 999em 999em 999em 0.14em;
+                 box-shadow: 0 0.09em 0.32em rgba(43,74,92,0.16);
                  vertical-align: baseline; }
-  .wb-dots { display: inline-flex; gap: 5px; align-items: center; }
-  .wb-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--label); opacity: .45;
+  .wb-dots { display: inline-flex; gap: 0.11em; align-items: center; }
+  .wb-dots i { width: 0.18em; height: 0.18em; border-radius: 50%; background: var(--label); opacity: .45;
                animation: wbDot 1s ease-in-out infinite; }
   .wb-dots i:nth-child(2) { animation-delay: .15s; }
   .wb-dots i:nth-child(3) { animation-delay: .3s; }
   .wb-word { display: none; }
   .wb-keep { white-space: nowrap; }
-  @media (max-width: 479px) { .wb-keep { white-space: normal; } .hero-pop { padding: 22px 10px; } }
+  @media (max-width: 479px) { .wb-keep { white-space: normal; } .hero-break { display: none; } }
   .wb-fx { position: absolute; opacity: 0; pointer-events: none; z-index: 2; display: none; }
-  .wb-fx-a { left: 100%; top: 50%; width: 40px; height: 52px; margin-top: -51px;
-             --pin-from: translate(-20px, 28px); }
-  .wb-fx-b { left: 100%; top: 0; width: 24px; height: 28px; margin-left: -12px; margin-top: -13px;
-             --pin-from: translate(-10px, 14px); }
+  .wb-fx-a { left: 100%; top: 50%; width: 0.9em; height: 1.18em; margin-top: -1.16em;
+             --pin-from: translate(-0.45em, 0.64em); }
+  .wb-fx-b { left: 100%; top: 0; width: 0.55em; height: 0.64em; margin-left: -0.27em; margin-top: -0.3em;
+             --pin-from: translate(-0.23em, 0.32em); }
   .word-bubble.wb-a .wb-fx-a, .word-bubble.wb-b .wb-fx-b { display: block; }
   .wb-pin-g { transform-box: fill-box; transform-origin: center; }
   .word-bubble.wb-on .wb-dots { display: none; }
   .word-bubble.wb-on .wb-word { display: inline-block; animation: wbSpring .45s cubic-bezier(.34,1.56,.64,1) both; }
   .word-bubble.wb-pin-on .wb-fx { animation: wbFx .25s ease forwards; }
   .word-bubble.wb-pin-on .wb-pin-g { animation: wbPinG .55s cubic-bezier(.2,.7,.3,1) both; }
-  @keyframes wbDot { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
+  @keyframes wbDot { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-0.09em); } }
   @keyframes wbSpring { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
   @keyframes wbFx { to { opacity: 1; } }
-  @keyframes wbPinG { from { transform: var(--pin-from, translate(-34px, 40px)) scale(.35); opacity: 0; }
+  @keyframes wbPinG { from { transform: var(--pin-from, translate(-0.77em, 0.91em)) scale(.35); opacity: 0; }
                       to { transform: none; opacity: 1; } }
   /* final state statically: reduced motion or no JS */
   html:not(.js) .wb-dots { display: none; }
@@ -202,7 +202,7 @@
     .wb-pin-g { animation: none !important; }
   }
 
-  .thread { display: flex; flex-direction: column; }
+  .thread { display: flex; flex-direction: column; max-width: var(--col); margin: 0 auto; }
 
   .divider { text-align: center; margin: 34px 0 20px; }
   .divider span { display: inline-block; background: var(--white); color: var(--label);
@@ -425,7 +425,7 @@
           <line x1="100" y1="18" x2="100" y2="4"/>
           <line x1="156.6" y1="30.3" x2="169.3" y2="20.4"/>
         </svg>
-        <h1 class="hero-h">Bust your plans <span class="wb-keep">out of the <span class="word-bubble wb-b"><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="wb-word">bubble</span><svg class="wb-fx wb-fx-a" aria-hidden="true" viewBox="0 0 40 52" fill="none"><path d="M1 51 Q 9 42 18 28" stroke="#E2604A" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 6" opacity="0.85"></path><g class="wb-pin-g"><path d="M26 3 c-5.5 0 -9.5 4.1 -9.5 8.7 0 6.1 9.5 13.8 9.5 13.8 s9.5 -7.7 9.5 -13.8 C35.5 7.1 31.5 3 26 3 Z" fill="#E2604A"></path><circle cx="26" cy="11.5" r="3" fill="#FFFFFF"></circle></g></svg><svg class="wb-fx wb-fx-b" aria-hidden="true" viewBox="0 0 24 28" fill="none"><g class="wb-pin-g"><path d="M12 2 c-5.5 0 -9.5 4.1 -9.5 8.7 0 6.1 9.5 13.8 9.5 13.8 s9.5 -7.7 9.5 -13.8 C21.5 6.1 17.5 2 12 2 Z" fill="#E2604A"></path><circle cx="12" cy="10.5" r="3" fill="#FFFFFF"></circle></g></svg></span></span></h1>
+        <h1 class="hero-h">Bust your plans<br class="hero-break"><span class="wb-keep">out of the <span class="word-bubble wb-b"><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="wb-word">bubble</span><svg class="wb-fx wb-fx-a" aria-hidden="true" viewBox="0 0 40 52" fill="none"><path d="M1 51 Q 9 42 18 28" stroke="#E2604A" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 6" opacity="0.85"></path><g class="wb-pin-g"><path d="M26 3 c-5.5 0 -9.5 4.1 -9.5 8.7 0 6.1 9.5 13.8 9.5 13.8 s9.5 -7.7 9.5 -13.8 C35.5 7.1 31.5 3 26 3 Z" fill="#E2604A"></path><circle cx="26" cy="11.5" r="3" fill="#FFFFFF"></circle></g></svg><svg class="wb-fx wb-fx-b" aria-hidden="true" viewBox="0 0 24 28" fill="none"><g class="wb-pin-g"><path d="M12 2 c-5.5 0 -9.5 4.1 -9.5 8.7 0 6.1 9.5 13.8 9.5 13.8 s9.5 -7.7 9.5 -13.8 C21.5 6.1 17.5 2 12 2 Z" fill="#E2604A"></path><circle cx="12" cy="10.5" r="3" fill="#FFFFFF"></circle></g></svg></span></span></h1>
       </div>
       <p class="hero-sub">Fenn lives in your group chat — it remembers, reminds, and knows where things happen.</p>
     </div>
@@ -647,17 +647,18 @@
           }
           return true;
         }
+        var fs = parseFloat(getComputedStyle(h1).fontSize); // hero-h px font-size at current vw
         var mid = (b.top + b.bottom) / 2 + sy;
-        var pinA = { left: b.right + 16.5, right: b.right + 35.5, top: mid - 48, bottom: mid - 22.4 };
+        var pinA = { left: b.right + 0.375*fs, right: b.right + 0.807*fs, top: mid - 1.09*fs, bottom: mid - 0.51*fs };
         wb.classList.remove('wb-a', 'wb-b');
-        if (clear(pinA, 8)) { wb.classList.add('wb-a'); return; }
+        if (clear(pinA, 0.18*fs)) { wb.classList.add('wb-a'); return; }
         wb.classList.add('wb-b');
         var cy = b.top + sy;
         var dx = 0;
-        for (var s = 0; s <= 48; s += 4) {
-          if (clear({ left: b.right + s - 12, right: b.right + s + 12, top: cy - 13, bottom: cy + 15 }, 8)) { dx = s; break; }
+        for (var s = 0; s <= 1.09*fs; s += 0.09*fs) {
+          if (clear({ left: b.right + s - 0.27*fs, right: b.right + s + 0.27*fs, top: cy - 0.3*fs, bottom: cy + 0.34*fs }, 0.18*fs)) { dx = s; break; }
         }
-        fxB.style.marginLeft = (-12 + dx) + 'px';
+        fxB.style.marginLeft = (-0.27*fs + dx) + 'px';
       }
       if (reduce) {
         wb.classList.add('wb-on');
