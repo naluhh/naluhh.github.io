@@ -1,13 +1,13 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Fenn — Chat that thinks</title>
-<meta name="description" content="Chat that thinks. Fenn lives in the conversation — answering questions, picking up plans, and getting everyone there." />
+<meta name="description" content="Fenn lives in your group chat — it remembers, reminds, and knows where things happen." />
 
 <link rel="canonical" href="https://fenn.chat/" />
-<meta name="theme-color" content="#00B4FF" />
+<meta name="theme-color" content="#BADDEB" />
 
 <!-- Icons -->
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32.png?v=3" />
@@ -19,270 +19,713 @@
 <meta property="og:site_name" content="Fenn" />
 <meta property="og:url" content="https://fenn.chat/" />
 <meta property="og:title" content="Add me on Fenn" />
-<meta property="og:description" content="Answers in every thread. Fenn lives in your conversations, answering questions, remembering details, and turning ideas into events you show up to." />
+<meta property="og:description" content="Fenn lives in your group chat — it remembers, reminds, and knows where things happen." />
 <meta property="og:image" content="https://fenn.chat/assets/og-image.png?v=10" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
-<meta property="og:image:alt" content="Fenn — Chat that thinks. Fenn books an event right in the conversation." />
 
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Add me on Fenn" />
-<meta name="twitter:description" content="Answers in every thread — right in the conversation." />
+<meta name="twitter:description" content="Fenn lives in your group chat — it remembers, reminds, and knows where things happen." />
 <meta name="twitter:image" content="https://fenn.chat/assets/og-image.png?v=10" />
 
-<link rel="stylesheet" href="assets/colors_and_type.css" />
-<link rel="stylesheet" href="site.css" />
+<style>
+  /* ============================================================
+     fenn.chat — marketing homepage v4
+     One scrolling group chat (camping weekend) over a white
+     chalk-line map on a sunny sky, with a grass strip along the
+     bottom. STRICT SINGLE PALETTE:
+       sky #BADDEB · white lines/bubbles · deep blue #3D7391/#2B4A5C
+       coral #E2604A = FENN ONLY · grass #8FBF6F (bottom strip only)
+     ============================================================ */
+
+  :root {
+    --font: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Inter", "Helvetica Neue", Arial, sans-serif;
+
+    --sky:        #BADDEB;
+    --white:      #FFFFFF;
+    --label:      #3D7391;   /* map labels, muted UI text */
+    --ink:        #2B4A5C;   /* human bubble text, headlines */
+    --coral:      #E2604A;   /* FENN ONLY */
+    --coral-deep: #CE5038;
+    --grass:      #8FBF6F;
+    --grass-dk:   #5E8F45;
+    --char-ink:   #1E1E1E;   /* mascot outline/eyes */
+    --ring-cool:  #7FB2C9;
+
+    --bubble-shadow: 0 2px 10px rgba(43,74,92,0.12);
+    --coral-glow: 0 6px 18px rgba(226,96,74,0.32);
+    --r: 14px;
+    --col: 560px;
+    --grass-h: 74px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font); color: var(--ink); background: var(--sky);
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
+    line-height: 1.4; padding-bottom: 96px;
+  }
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Map layer ---------- */
+  .map-layer { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--sky); }
+  .map-cam {
+    position: absolute; inset: -6%; will-change: transform;
+    transform: scale(1) translate(0,0);
+    transition: transform 820ms cubic-bezier(.4,0,.2,1);
+    transform-origin: 50% 45%;
+  }
+  .map-cam svg { width: 100%; height: 100%; display: block; }
+
+  .cloud { animation: drift 60s linear infinite alternate; }
+  .cloud.b { animation-duration: 82s; animation-direction: alternate-reverse; }
+  @keyframes drift { from { transform: translateX(-24px); } to { transform: translateX(28px); } }
+
+  /* winner coral pin drops in after the vote */
+  #pin-winner { opacity: 0; transform: translateY(-14px); transition: opacity 600ms ease, transform 600ms cubic-bezier(.2,.8,.3,1); }
+  .map-cam[data-beat="winner"] #pin-winner,
+  .map-cam[data-beat="campsite"] #pin-winner,
+  .map-cam[data-beat="3"] #pin-winner,
+  .map-cam[data-beat="out"] #pin-winner { opacity: 1; transform: translateY(0); }
+
+  /* beat-3 fx */
+  #fx { opacity: 0; transition: opacity 650ms ease; }
+  .map-cam[data-beat="3"] #fx { opacity: 1; }
+  #route { opacity: 0; transition: opacity 700ms ease; animation: dashflow 1.5s linear infinite; }
+  .map-cam[data-beat="3"] #route { opacity: 1; }
+  @keyframes dashflow { to { stroke-dashoffset: -150; } }
+  .geo { transform-box: fill-box; transform-origin: center; }
+  .map-cam[data-beat="3"] .geo { animation: pulse 2.4s ease-out infinite; }
+  .map-cam[data-beat="3"] .geo.g2 { animation-delay: .5s; }
+  .map-cam[data-beat="3"] .geo.g3 { animation-delay: 1s; }
+  @keyframes pulse { 0% { transform: scale(.45); opacity: .65; } 70% { transform: scale(1.3); opacity: 0; } 100% { opacity: 0; } }
+
+  /* ---------- Column quiet-zone scrim (dims map behind the chat column) ---------- */
+  .column-scrim {
+    position: fixed; top: 0; bottom: 0; left: 50%; transform: translateX(-50%);
+    width: min(600px, 100%); z-index: 1; pointer-events: none;
+    background: linear-gradient(90deg,
+      rgba(186,221,235,0) 0%,
+      rgba(186,221,235,0.66) 9%,
+      rgba(186,221,235,0.66) 91%,
+      rgba(186,221,235,0) 100%);
+  }
+
+  /* ---------- Grass strip (bottom, in front of map) ---------- */
+  .grass-strip { position: fixed; left: 0; right: 0; bottom: 0; height: var(--grass-h); z-index: 2; pointer-events: none; }
+  .grass-strip svg { width: 100%; height: 100%; display: block; }
+
+  /* ---------- Nav ---------- */
+  nav { position: sticky; top: 0; z-index: 40; background: rgba(186,221,235,0.82);
+        backdrop-filter: saturate(160%) blur(12px); -webkit-backdrop-filter: saturate(160%) blur(12px);
+        border-bottom: 1px solid rgba(61,115,145,0.14); }
+  .nav-inner { max-width: var(--col); margin: 0 auto; padding: 13px 20px; display: flex; align-items: center; justify-content: space-between; }
+  .wordmark { display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 21px; letter-spacing: -0.04em; color: var(--ink); }
+  .wordmark img { width: 34px; height: auto; display: block; }
+  .nav-right { display: flex; align-items: center; gap: 16px; }
+  .nav-link { font-weight: 700; font-size: 14px; letter-spacing: -0.01em; color: var(--label); }
+  .btn-app { background: var(--white); color: var(--ink); font-weight: 700; font-size: 14px; letter-spacing: -0.01em;
+             padding: 10px 18px; border-radius: 100px; border: none; cursor: pointer; box-shadow: var(--bubble-shadow);
+             transition: transform .15s ease; }
+  .btn-app:active { transform: scale(0.96); }
+
+  /* ---------- Column ---------- */
+  main { position: relative; z-index: 3; max-width: var(--col); margin: 0 auto; padding: 0 20px; }
+
+  .kicker { text-align: center; padding: 56px 12px 8px; }
+  /* hero intro: headline starts inside a white bubble that pops once, leaving it free on the sky */
+  .hero-pop { position: relative; display: inline-block; padding: 22px 32px; }
+  .hero-bubble { position: absolute; inset: 0; z-index: 0; background: var(--white); border-radius: 28px; box-shadow: var(--bubble-shadow); }
+  .hero-burst { position: absolute; left: 50%; top: 50%; width: 118%; z-index: 0; pointer-events: none; opacity: 0;
+                transform: translate(-50%,-50%) scale(.7); }
+  .hero-h { position: relative; z-index: 1; font-size: clamp(34px, 7vw, 44px); font-weight: 700; letter-spacing: -0.035em; line-height: 1.12; color: var(--ink); }
+  .hero-sub { font-size: 16px; color: var(--label); letter-spacing: -0.01em; margin: 10px auto 0; max-width: 430px; opacity: 0; }
+  /* fixed ~0.8s pop sequence, fired once by JS (first scroll intent or 2.5s) */
+  .kicker.popped .hero-bubble { animation: heroPop .34s cubic-bezier(.55,0,.65,.35) forwards; }
+  .kicker.popped .hero-burst { animation: heroBurst .5s cubic-bezier(.2,.7,.3,1) .05s forwards; }
+  .kicker.popped .hero-sub { animation: heroSub .45s ease .32s forwards; }
+  /* no-JS fallback: headline free from the start */
+  html:not(.js) .hero-bubble, html:not(.js) .hero-burst { display: none; }
+  html:not(.js) .hero-sub { opacity: 1; }
+  @keyframes heroPop { from { transform: scale(1); opacity: 1; } to { transform: scale(1.18); opacity: 0; } }
+  @keyframes heroBurst { 0% { transform: translate(-50%,-50%) scale(.7); opacity: 0; }
+                         30% { opacity: .95; }
+                         100% { transform: translate(-50%,-50%) scale(1.2); opacity: 0; } }
+  @keyframes heroSub { to { opacity: 1; } }
+  @media (prefers-reduced-motion: reduce) {
+    .hero-bubble, .hero-burst { display: none !important; }
+    .hero-sub { opacity: 1 !important; animation: none !important; }
+  }
+
+  /* the word "bubble" rendered as an actual chat bubble */
+  .word-bubble { position: relative; display: inline-block; padding: 4px 22px;
+                 background: var(--white); color: var(--ink);
+                 border-radius: 999px 999px 999px 6px;
+                 box-shadow: 0 4px 14px rgba(43,74,92,0.16);
+                 vertical-align: baseline; }
+  .wb-dots { display: inline-flex; gap: 5px; align-items: center; }
+  .wb-dots i { width: 8px; height: 8px; border-radius: 50%; background: var(--label); opacity: .45;
+               animation: wbDot 1s ease-in-out infinite; }
+  .wb-dots i:nth-child(2) { animation-delay: .15s; }
+  .wb-dots i:nth-child(3) { animation-delay: .3s; }
+  .wb-word { display: none; }
+  .wb-keep { white-space: nowrap; }
+  @media (max-width: 479px) { .wb-keep { white-space: normal; } .hero-pop { padding: 22px 10px; } }
+  .wb-fx { position: absolute; opacity: 0; pointer-events: none; z-index: 2; display: none; }
+  .wb-fx-a { left: 100%; top: 50%; width: 40px; height: 52px; margin-top: -51px;
+             --pin-from: translate(-20px, 28px); }
+  .wb-fx-b { left: 100%; top: 0; width: 24px; height: 28px; margin-left: -12px; margin-top: -13px;
+             --pin-from: translate(-10px, 14px); }
+  .word-bubble.wb-a .wb-fx-a, .word-bubble.wb-b .wb-fx-b { display: block; }
+  .wb-pin-g { transform-box: fill-box; transform-origin: center; }
+  .word-bubble.wb-on .wb-dots { display: none; }
+  .word-bubble.wb-on .wb-word { display: inline-block; animation: wbSpring .45s cubic-bezier(.34,1.56,.64,1) both; }
+  .word-bubble.wb-pin-on .wb-fx { animation: wbFx .25s ease forwards; }
+  .word-bubble.wb-pin-on .wb-pin-g { animation: wbPinG .55s cubic-bezier(.2,.7,.3,1) both; }
+  @keyframes wbDot { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-4px); } }
+  @keyframes wbSpring { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+  @keyframes wbFx { to { opacity: 1; } }
+  @keyframes wbPinG { from { transform: var(--pin-from, translate(-34px, 40px)) scale(.35); opacity: 0; }
+                      to { transform: none; opacity: 1; } }
+  /* final state statically: reduced motion or no JS */
+  html:not(.js) .wb-dots { display: none; }
+  html:not(.js) .wb-word { display: inline-block; }
+  html:not(.js) .word-bubble .wb-fx { opacity: 1; }
+  @media (prefers-reduced-motion: reduce) {
+    .wb-dots { display: none !important; }
+    .wb-word { display: inline-block !important; animation: none !important; }
+    .word-bubble .wb-fx { animation: none !important; }
+    .word-bubble.wb-pin-on .wb-fx { opacity: 1 !important; }
+    .wb-pin-g { animation: none !important; }
+  }
+
+  .thread { display: flex; flex-direction: column; }
+
+  .divider { text-align: center; margin: 34px 0 20px; }
+  .divider span { display: inline-block; background: var(--white); color: var(--label);
+                  font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 100px; box-shadow: var(--bubble-shadow); }
+
+  .cluster { display: flex; flex-direction: column; gap: 6px; }
+
+  .msg { display: flex; align-items: flex-end; gap: 8px; max-width: 80%; margin-top: 0; }
+  .msg.first { margin-top: 6px; }
+  .msg .avatar { width: 24px; height: 24px; border-radius: 50%; flex: none; display: grid; place-items: center;
+                 font-size: 10.5px; font-weight: 700; color: var(--ink); background: var(--white); letter-spacing: -0.02em;
+                 margin-bottom: 0; box-shadow: var(--bubble-shadow); }
+  .msg .avatar.photo { width: 30px; height: auto; border-radius: 0; overflow: visible; background: none; box-shadow: none; display: block; align-self: flex-end; }
+  .msg .avatar.photo img { width: 100%; height: auto; display: block; }
+  .bubble { padding: 8px 12px; border-radius: var(--r); font-size: 15px; line-height: 1.35; letter-spacing: -0.01em;
+            color: var(--ink); background: var(--white); box-shadow: var(--bubble-shadow); }
+  .name { font-size: 11px; font-weight: 700; letter-spacing: -0.01em; color: var(--label); margin: 6px 0 1px 38px;
+          text-shadow: 0 1px 6px rgba(186,221,235,0.9); }
+  .cluster > .name:first-child { margin-top: 0; }
+
+  .msg.recv { align-self: flex-start; }
+  .msg.recv .bubble { border-bottom-left-radius: 4px; }
+  .msg.you { align-self: flex-end; flex-direction: row-reverse; }
+  .msg.you .bubble { border-bottom-right-radius: 4px; }
+
+  /* Fenn — coral, the boldest figure */
+  .msg.fenn { align-self: flex-start; }
+  .msg.fenn .avatar { background: none; box-shadow: none; padding: 0; width: 38px; }
+  .msg.fenn .avatar img { width: 38px; height: auto; display: block; }
+  .msg.fenn .bubble { background: var(--coral); color: #fff; border-bottom-left-radius: 4px; box-shadow: var(--coral-glow); }
+  .name.fenn-name { color: var(--coral-deep); }
+
+  /* consecutive messages from one sender group: avatar aligns with the LAST bubble of the group */
+  .msg.cont { margin-top: 4px; }
+  .msg:has(+ .msg.cont) .avatar { visibility: hidden; }
+
+  /* ---------- Inline cards (separate white cards, never inside a bubble) ---------- */
+  .card { background: #fff; border-radius: 12px; padding: 12px 13px; box-shadow: 0 3px 12px rgba(43,74,92,0.14); width: 300px; max-width: 100%; color: var(--ink); }
+  .card-title { font-size: 12px; font-weight: 800; letter-spacing: 0.02em; color: var(--label); text-transform: uppercase; margin-bottom: 10px; display: flex; align-items: center; gap: 7px; }
+  .card-title svg { display: block; }
+
+  /* poll */
+  .poll { display: flex; flex-direction: column; gap: 8px; }
+  .poll-opt { position: relative; border-radius: 10px; overflow: hidden; background: #EEF5F8; min-height: 38px; display: flex; }
+  .poll-fill { position: absolute; inset: 0 auto 0 0; background: #CFE0EA; }
+  .poll-opt.win .poll-fill { background: rgba(226,96,74,0.22); }
+  .poll-content { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; padding: 8px 12px; }
+  .poll-label { font-size: 14px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+  .poll-opt.win .poll-label { font-weight: 700; }
+  .poll-count { font-size: 13px; font-weight: 700; color: var(--ink); flex: none; }
+
+  .task-row { display: flex; align-items: flex-start; gap: 10px; padding: 9px 0; border-top: 1px solid #E7EFF3; min-height: 40px; }
+  .task-row:first-of-type { border-top: none; }
+  .task-check { width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--coral); flex: none; margin-top: 1px; }
+  .cal-ico { width: 40px; height: 40px; border-radius: 11px; background: rgba(226,96,74,0.12); color: var(--coral-deep); flex: none;
+             display: flex; flex-direction: column; align-items: center; justify-content: center; line-height: 1; }
+  .cal-ico .m { font-size: 9px; font-weight: 800; letter-spacing: .06em; text-transform: uppercase; }
+  .cal-ico .d { font-size: 18px; font-weight: 800; margin-top: 2px; }
+  .task-t { display: block; font-size: 14px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+  .task-s { display: block; font-size: 12px; color: var(--label); margin-top: 1px; }
+
+  /* ---------- Typing ---------- */
+  .typing { display: inline-flex; gap: 4px; align-items: center; padding: 12px 14px; border-radius: var(--r); border-bottom-left-radius: 4px; background: var(--coral); box-shadow: var(--coral-glow); }
+  .typing span { width: 7px; height: 7px; border-radius: 50%; background: #fff; opacity: .55; animation: blink 1.2s infinite both; }
+  .typing span:nth-child(2) { animation-delay: .2s; }
+  .typing span:nth-child(3) { animation-delay: .4s; }
+  @keyframes blink { 0%,80%,100% { opacity:.4; transform: translateY(0); } 40% { opacity:1; transform: translateY(-2px); } }
+
+  /* ---------- Interstitials ---------- */
+  .interstitial { text-align: center; padding: 60px 12px 56px; }
+  .interstitial .pill { display: inline-block; background: var(--white); border-radius: 22px; padding: 20px 28px; box-shadow: var(--bubble-shadow); max-width: 460px; }
+  .interstitial h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.2; color: var(--ink); }
+  .interstitial p { font-size: 15.5px; color: var(--label); margin-top: 7px; letter-spacing: -0.01em; }
+
+  /* ---------- Close: quick-reply chips ---------- */
+  .chips { display: flex; gap: 10px; margin: 14px 0 0 46px; flex-wrap: wrap; }
+  .chip { display: inline-flex; align-items: center; padding: 11px 20px; border-radius: 100px; cursor: pointer;
+          font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em;
+          background: var(--white); color: var(--ink); border: 1.5px solid rgba(61,115,145,0.28);
+          box-shadow: var(--bubble-shadow); transition: transform .15s ease; }
+  .chip.solid { background: var(--coral); color: #fff; border-color: var(--coral); box-shadow: var(--coral-glow); }
+  .chip:active { transform: scale(0.96); }
+
+  /* ---------- Sticky input (stands on grass) ---------- */
+  .inputbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; }
+  .inputbar-inner { max-width: var(--col); margin: 0 auto; padding: 0 20px calc(var(--grass-h) - 30px); display: flex; align-items: center; gap: 10px; }
+  .inputbar .field { flex: 1; height: 48px; border-radius: 100px; background: #fff; display: flex; align-items: center; padding: 0 6px 0 18px; gap: 8px; box-shadow: 0 6px 18px rgba(43,74,92,0.18); }
+  .inputbar .field .ph { flex: 1; color: var(--label); font-size: 15.5px; letter-spacing: -0.01em; }
+  .inputbar .field .mascot { width: 22px; height: auto; }
+  .send { width: 40px; height: 40px; border-radius: 50%; flex: none; border: none; cursor: pointer; background: var(--coral); display: grid; place-items: center; box-shadow: var(--coral-glow); transition: transform .15s ease; }
+  .send:active { transform: scale(0.9); }
+
+  /* ---------- Footer ---------- */
+  footer { position: relative; z-index: 3; margin-top: 40px; }
+  .footer-inner { max-width: var(--col); margin: 0 auto; padding: 26px 20px 20px; display: flex; align-items: center; justify-content: center; gap: 8px 16px; flex-wrap: wrap; font-size: 13px; color: var(--ink); }
+  .footer-inner .fenn-foot { font-weight: 800; letter-spacing: -0.03em; font-size: 15px; }
+  .footer-inner .dot { opacity: .4; }
+  .footer-inner a { color: var(--label); }
+
+  /* ---------- Reveal ---------- */
+  .js .reveal { opacity: 0; transform: translateY(14px); transition: opacity .5s ease, transform .5s cubic-bezier(.2,.7,.3,1); }
+  .js .reveal.in { opacity: 1; transform: none; }
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+    .map-cam { transition: none !important; }
+    .cloud, #route, .geo { animation: none !important; }
+    html { scroll-behavior: auto; }
+  }
+  @media (max-width: 640px) {
+    .interstitial h2 { font-size: 23px; }
+    .msg { max-width: 90%; }
+  }
+</style>
 </head>
 <body>
 
-<!-- ============ NAV ============ -->
-<header class="nav" id="top">
-  <div class="wrap">
-    <a class="brand" href="#top">
-      <img src="assets/bulle/bulle-logo.svg" alt="Fenn" />
-      <span>Fenn</span>
-    </a>
-    <nav class="nav-links">
-      <a class="link" href="#features">Features</a>
-      <a class="link" href="#how">How it works</a>
-      <a class="link" href="#crews">Stories</a>
-      <a class="btn-getapp" href="https://apps.apple.com/us/app/fenn/id6761315757">Get the app</a>
-    </nav>
-  </div>
-</header>
+  <!-- ===================== MAP LAYER (chalk lines on sky) ===================== -->
+  <div class="map-layer" aria-hidden="true">
+    <div class="map-cam" id="cam" data-beat="1">
+      <svg viewBox="0 0 1600 1100" preserveAspectRatio="xMidYMid slice">
+        <!-- clouds -->
+        <g fill="#FFFFFF">
+          <ellipse class="cloud" cx="360" cy="150" rx="150" ry="46" opacity="0.32"/>
+          <ellipse class="cloud b" cx="1180" cy="230" rx="180" ry="52" opacity="0.26"/>
+          <ellipse class="cloud" cx="820" cy="90" rx="120" ry="38" opacity="0.22"/>
+        </g>
 
-<!-- ============ HERO ============ -->
-<section class="hero">
-  <div class="wrap">
-    <div>
-      <div class="eyebrow">Answers in every thread</div>
-      <h1><span style="white-space:nowrap">a messaging app</span><br />that talks back</h1>
-      <p class="sub">Fenn lives in your conversations, answering questions, remembering wifi codes, and turning ideas into events you show up to.</p>
-      <div class="cta">
-        <a class="appstore" href="https://apps.apple.com/us/app/fenn/id6761315757">
-          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.03-2.6 2.12-3.85 2.22-3.91-1.21-1.77-3.09-2.01-3.76-2.04-1.6-.16-3.12.94-3.93.94-.81 0-2.06-.92-3.39-.89-1.74.03-3.35 1.01-4.25 2.57-1.81 3.14-.46 7.79 1.3 10.34.86 1.25 1.88 2.65 3.22 2.6 1.29-.05 1.78-.83 3.34-.83 1.56 0 2 .83 3.37.81 1.39-.03 2.27-1.27 3.12-2.53.98-1.45 1.39-2.85 1.41-2.92-.03-.01-2.7-1.04-2.73-4.13zM14.6 4.42c.71-.86 1.19-2.06 1.06-3.25-1.02.04-2.26.68-2.99 1.54-.66.76-1.23 1.98-1.08 3.15 1.14.09 2.3-.58 3.01-1.44z"/></svg>
-          <span class="as-txt"><span class="as-sm">Download on the</span><span class="as-lg">App Store</span></span>
-        </a>
-        <span class="free-pill">Free</span>
+        <!-- roads -->
+        <g fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round">
+          <path d="M470 940 C740 640 980 470 1200 300" stroke-opacity="0.5"/>
+          <path d="M110 360 C420 338 900 350 1220 326" stroke-opacity="0.42"/>
+          <path d="M300 110 C282 400 300 700 322 1050" stroke-opacity="0.4"/>
+          <path d="M1150 190 C1140 460 1180 730 1116 1020" stroke-opacity="0.4"/>
+          <path d="M140 640 C440 616 820 660 1120 676" stroke-opacity="0.36"/>
+        </g>
+
+        <!-- parks -->
+        <g fill="none" stroke="#FFFFFF" stroke-opacity="0.52" stroke-width="2.5" stroke-dasharray="7 9">
+          <rect x="96" y="452" width="664" height="86" rx="43"/>
+          <ellipse cx="1108" cy="228" rx="156" ry="96"/>
+          <ellipse cx="1214" cy="742" rx="72" ry="46"/>
+        </g>
+        <!-- coastline -->
+        <g fill="none" stroke="#FFFFFF" stroke-opacity="0.42" stroke-width="2.5" stroke-dasharray="4 10">
+          <path d="M126 -20 C150 210 128 470 150 720 C162 902 130 1004 152 1120"/>
+          <path d="M1198 -20 C1176 150 1214 260 1180 400 C1150 560 1226 700 1206 860 C1196 962 1216 1030 1198 1120"/>
+        </g>
+
+        <!-- labels -->
+        <g font-family="-apple-system, Inter, sans-serif" fill="#3D7391" font-weight="700" letter-spacing="0.12em">
+          <text x="150" y="300" font-size="17">RICHMOND</text>
+          <text x="120" y="506" font-size="15">GOLDEN GATE PARK</text>
+          <text x="188" y="780" font-size="18">SUNSET</text>
+          <text x="96" y="980" font-size="15">OCEAN BEACH</text>
+          <text x="382" y="682" font-size="15">TWIN PEAKS</text>
+          <text x="1052" y="250" font-size="16">PRESIDIO</text>
+          <text x="1176" y="150" font-size="15">MARINA</text>
+          <text x="1150" y="470" font-size="16">DOWNTOWN</text>
+          <text x="1150" y="690" font-size="15">THE MISSION</text>
+          <text x="1236" y="900" font-size="18" opacity="0.85" transform="rotate(12 1236 900)">SAN FRANCISCO BAY</text>
+        </g>
+
+        <!-- winner coral pin -->
+        <g id="pin-winner" transform="translate(372,300)">
+          <path d="M0 -30 C16 -30 28 -18 28 -2 C28 18 0 40 0 40 C0 40 -28 18 -28 -2 C-28 -18 -16 -30 0 -30 Z" fill="#E2604A"/>
+          <circle cy="-2" r="9" fill="#fff"/>
+        </g>
+
+        <!-- beat-3 fx -->
+        <g id="fx">
+          <g>
+            <circle class="geo g1" cx="700" cy="560" r="58" fill="none" stroke="#E2604A" stroke-width="3" stroke-opacity="0.65"/>
+            <circle class="geo g2" cx="700" cy="560" r="58" fill="none" stroke="#E2604A" stroke-width="3" stroke-opacity="0.5"/>
+            <circle class="geo g3" cx="700" cy="560" r="58" fill="none" stroke="#E2604A" stroke-width="3" stroke-opacity="0.4"/>
+          </g>
+          <path id="route" fill="none" stroke="#E2604A" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 14"
+                d="M470 470 C560 496 632 540 700 560 C806 592 902 648 1010 694"/>
+          <g transform="translate(700,560)">
+            <path d="M0 -28 C15 -28 26 -17 26 -2 C26 17 0 37 0 37 C0 37 -26 17 -26 -2 C-26 -17 -15 -28 0 -28 Z" fill="#E2604A"/>
+            <circle cy="-2" r="8.5" fill="#fff"/>
+          </g>
+          <g>
+            <circle r="9.5" fill="#fff" stroke="#E2604A" stroke-width="4">
+              <animateMotion dur="5.5s" repeatCount="indefinite" rotate="0"><mpath href="#route"/></animateMotion>
+            </circle>
+            <circle r="8.5" fill="#fff" stroke="#7FB2C9" stroke-width="4">
+              <animateMotion dur="5.5s" begin="-2.6s" repeatCount="indefinite" rotate="0"><mpath href="#route"/></animateMotion>
+            </circle>
+          </g>
+        </g>
+      </svg>
+    </div>
+  </div>
+
+  <div class="column-scrim" aria-hidden="true"></div>
+
+  <!-- ===================== NAV ===================== -->
+  <nav>
+    <div class="nav-inner">
+      <a class="wordmark" href="#top"><img src="/assets/fenn-logo.png" alt="">fenn</a>
+      <div class="nav-right">
+        <a class="nav-link" href="/learn-more">Learn more</a>
+        <a class="btn-app" href="https://apps.apple.com/us/app/fenn/id6761315757">Get the app</a>
       </div>
     </div>
-    <div class="hero-convo" id="heroPhone">
-      <div class="chat">
-        <div class="chat-body">
-          <div class="chat-track">
-            <div class="msg them" data-pre="500" data-hold="1100"><div class="uname" style="color:var(--u-09)">Bob</div><div class="bubble">Who's in for soccer tomorrow?</div></div>
-            <div class="msg them" data-pre="800" data-hold="1100"><div class="uname" style="color:var(--u-14)">Samantha</div><div class="bubble">I'm totally in. 6pm at the old factory</div></div>
-            <div class="msg fenn" data-pre="1200" data-hold="1900"><div class="frow"><div class="bavatar"><img src="assets/bulle/bulle-logo.svg" alt="Fenn" /></div><div class="fcol"><div class="uname">Fenn</div><div class="bubble">I've added an event for that<div class="ev"><div class="evi"><img src="assets/icons/white/calendar.svg" alt="" /></div><div><div class="evt">Soccer</div><div class="evs">Tomorrow, 6:00 PM · Old Factory</div></div></div></div></div></div></div>
-            <div class="msg them" data-pre="900" data-hold="1300"><div class="uname" style="color:var(--u-05)">Gerry</div><div class="bubble">Okay cool! You guys watch the US soccer game earlier? can't believe it</div></div>
-            <div class="msg them" data-pre="650" data-hold="1100"><div class="uname" style="color:var(--u-12)">Alex</div><div class="bubble">No? It was on, crap</div></div>
-            <div class="msg fenn" data-pre="1500" data-hold="2600"><div class="frow"><div class="bavatar"><img src="assets/bulle/bulle-logo.svg" alt="Fenn" /></div><div class="fcol"><div class="uname">Fenn</div><div class="bubble">Alex! Okay, I'm going to drop updates here so Alex doesn't let his country down again. I've added all the games to your calendar, and I'll post results here after 🇺🇸</div></div></div></div>
-            <div class="msg them" data-pre="700" data-hold="2900"><div class="uname" style="color:var(--u-12)">Alex</div><div class="bubble">I'm swedish</div></div>
-          </div>
+  </nav>
+
+  <!-- ===================== THREAD ===================== -->
+  <main id="top">
+    <div class="kicker" data-cam="wide" data-beat="1">
+      <div class="hero-pop">
+        <span class="hero-bubble" aria-hidden="true"></span>
+        <svg class="hero-burst" aria-hidden="true" viewBox="0 0 200 120" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round">
+          <line x1="180" y1="60" x2="198" y2="60"/>
+          <line x1="156.6" y1="89.7" x2="169.3" y2="99.6"/>
+          <line x1="100" y1="102" x2="100" y2="116"/>
+          <line x1="43.4" y1="89.7" x2="30.7" y2="99.6"/>
+          <line x1="20" y1="60" x2="2" y2="60"/>
+          <line x1="43.4" y1="30.3" x2="30.7" y2="20.4"/>
+          <line x1="100" y1="18" x2="100" y2="4"/>
+          <line x1="156.6" y1="30.3" x2="169.3" y2="20.4"/>
+        </svg>
+        <h1 class="hero-h">Bust your plans <span class="wb-keep">out of the <span class="word-bubble wb-b"><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="wb-word">bubble</span><svg class="wb-fx wb-fx-a" aria-hidden="true" viewBox="0 0 40 52" fill="none"><path d="M1 51 Q 9 42 18 28" stroke="#E2604A" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 6" opacity="0.85"></path><g class="wb-pin-g"><path d="M26 3 c-5.5 0 -9.5 4.1 -9.5 8.7 0 6.1 9.5 13.8 9.5 13.8 s9.5 -7.7 9.5 -13.8 C35.5 7.1 31.5 3 26 3 Z" fill="#E2604A"></path><circle cx="26" cy="11.5" r="3" fill="#FFFFFF"></circle></g></svg><svg class="wb-fx wb-fx-b" aria-hidden="true" viewBox="0 0 24 28" fill="none"><g class="wb-pin-g"><path d="M12 2 c-5.5 0 -9.5 4.1 -9.5 8.7 0 6.1 9.5 13.8 9.5 13.8 s9.5 -7.7 9.5 -13.8 C21.5 6.1 17.5 2 12 2 Z" fill="#E2604A"></path><circle cx="12" cy="10.5" r="3" fill="#FFFFFF"></circle></g></svg></span></span></h1>
+      </div>
+      <p class="hero-sub">Fenn lives in your group chat — it remembers, reminds, and knows where things happen.</p>
+    </div>
+
+    <div class="thread">
+
+      <!-- BEAT 1 -->
+      <div class="divider reveal"><span>Camp crew · Tuesday 6:12 pm</span></div>
+
+      <div class="cluster">
+        <div class="name reveal">Dana</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-dana.png" alt="Dana"></span><span class="bubble">ok june. samuel p taylor or china camp</span></div>
+        <div class="name reveal">Bob</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-bob.png" alt="Bob"></span><span class="bubble">either</span></div>
+        <div class="name reveal">Alex</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-alex.png" alt="Alex"></span><span class="bubble">china camp. no wait</span></div>
+        <div class="msg you first reveal"><span class="bubble">this is why we never go anywhere</span></div>
+
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Settling it:</span>
+        </div>
+        <div class="msg fenn cont reveal">
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="card">
+            <span class="card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h13" stroke="#E2604A" stroke-width="2.4" stroke-linecap="round"/></svg>
+              Where to?
+            </span>
+            <span class="poll">
+              <span class="poll-opt win"><span class="poll-fill" style="width:75%"></span><span class="poll-content"><span class="poll-label">Samuel P. Taylor</span><span class="poll-count">3</span></span></span>
+              <span class="poll-opt"><span class="poll-fill" style="width:25%"></span><span class="poll-content"><span class="poll-label">China Camp</span><span class="poll-count">1</span></span></span>
+            </span>
+          </span>
+        </div>
+
+        <div class="msg fenn cont reveal" data-typing data-cam="winner">
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Samuel P. Taylor it is. Reservations open Friday 8am.</span>
         </div>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- ============ CREW STRIP ============ -->
-<section class="crew-strip">
-  <div class="wrap">
-    <span class="lbl">Made for all your conversations</span>
-    <span class="chip"><span class="dot" style="background:var(--u-10)"></span>Partners</span>
-    <span class="chip"><span class="dot" style="background:var(--u-14)"></span>Parents</span>
-    <span class="chip"><span class="dot" style="background:var(--u-07)"></span>Pick-up soccer</span>
-    <span class="chip"><span class="dot" style="background:var(--u-13)"></span>Book clubs</span>
-    <span class="chip"><span class="dot" style="background:var(--u-03)"></span>BFFs</span>
-  </div>
-</section>
+      <div class="interstitial reveal"><div class="pill"><h2>Fenn gets the group to a decision</h2><p>From "either works" to booked.</p></div></div>
 
-<!-- ============ FEATURES ============ -->
-<section class="features" id="features">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">Why people love it</div>
-      <h2>No more<br />switching apps</h2>
-      <p>Fenn lives in the conversation and quietly brings whatever you need to the thread. Answering questions, catching events or reminders, or bringing facts to a friendly debate between friends.</p>
-    </div>
-    <div class="feat-grid">
-      <div class="feat-card reveal d1">
-        <div class="ficon"><img src="assets/icons/white/search.svg" alt="" /></div>
-        <h3>Never forget that little thing</h3>
-        <p>No detail gets lost — wifi codes, birthdays, or even that Thai place you went to over December.</p>
-      </div>
-      <div class="feat-card reveal d2">
-        <div class="ficon"><img src="assets/icons/white/map.svg" alt="" /></div>
-        <h3>Location in conversation</h3>
-        <p>Location is built in. See who just left, or what's good nearby. Places in chat show on the map.</p>
-      </div>
-      <div class="feat-card reveal d3">
-        <div class="ficon"><img src="assets/icons/white/checklist.svg" alt="" /></div>
-        <h3>Catches the big stuff</h3>
-        <p>Fenn automatically catches events, to-dos and reminders from your conversations.</p>
-      </div>
-    </div>
-  </div>
-</section>
+      <!-- BEAT 2 -->
+      <div class="divider reveal" data-cam="campsite" data-beat="campsite"><span>2 days later</span></div>
 
-<!-- ============ HOW IT WORKS ============ -->
-<section class="how" id="how">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">How it works</div>
-      <h2>Add Fenn. Talk like normal.</h2>
-      <p>No new habits, no setup marathon. Fenn fits right into how you already text.</p>
-    </div>
-    <div class="how-grid">
-      <div class="step reveal d1">
-        <div class="num">1</div>
-        <h3>Start a new chat</h3>
-        <p>Start a new conversation with a friend or family member.</p>
-      </div>
-      <div class="step reveal d2">
-        <div class="num">2</div>
-        <h3>Talk like you always do</h3>
-        <p>Plan dinner, argue about the time, ask it anything. Fenn reads along and keeps up.</p>
-      </div>
-      <div class="step reveal d3">
-        <div class="num">3</div>
-        <h3>Answers when you need them</h3>
-        <p>Fenn pops in with an answer or action before you think to ask.</p>
-      </div>
-    </div>
-  </div>
-</section>
+      <div class="cluster">
+        <div class="name reveal">Dana</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-dana.png" alt="Dana"></span><span class="bubble">what did we forget last year</span></div>
 
-<!-- ============ SHOWCASE (sticky phone) ============ -->
-<section class="showcase">
-  <div class="wrap">
-    <div class="head-center reveal">
-      <div class="eyebrow">See it in action</div>
-      <h2>For every thread in your life</h2>
-    </div>
-    <div class="sc-stage">
-      <div class="sc-steps">
-        <div class="sc-step" data-i="0">
-          <div class="sc-shot"><img src="assets/screens/screen-organize.png" alt="The Fenn home screen" loading="lazy" /></div>
-          <span class="kicker">Perspective</span>
-          <h3>See the whole picture</h3>
-          <p>Open the app and the plan, the place, and the next step are already waiting — Fenn reads the conversation and surfaces what matters before anyone digs for it.</p>
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Firewood, Advil, and Bob's sleeping bag. Bob has confirmed the bag has been in his trunk since August.</span>
         </div>
-        <div class="sc-step" data-i="1">
-          <div class="sc-shot"><img src="assets/screens/screen-answers.png" alt="Fenn answering in the thread" loading="lazy" /></div>
-          <span class="kicker">No App Switching</span>
-          <h3>Answers in the chat</h3>
-          <p>Ask for a spot, a recommendation, or a quick fact and Fenn answers right in the thread — no tab-switching, no copy-paste.</p>
-        </div>
-        <div class="sc-step" data-i="2">
-          <div class="sc-shot"><img src="assets/screens/screen-map.png" alt="Live location map in Fenn" loading="lazy" /></div>
-          <span class="kicker">Friend map</span>
-          <h3>People, places &amp; pictures on the map</h3>
-          <p>Fenn brings your conversation to the map. No other thread has a map that looks quite like yours.</p>
-        </div>
-        <div class="sc-step" data-i="4">
-          <div class="sc-shot"><img src="assets/screens/screen-plans.png" alt="Fenn turning chat into to-dos" loading="lazy" /></div>
-          <span class="kicker">Plans &amp; to-dos</span>
-          <h3>What you need before you ask</h3>
-          <p>"Someone bring the net" becomes a tracked to-do with a reminder — pulled straight from the conversation.</p>
+
+        <div class="name reveal">Bob</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-bob.png" alt="Bob"></span><span class="bubble">it has</span></div>
+      </div>
+
+      <div class="interstitial reveal"><div class="pill"><h2>It remembers last time</h2><p>So you don't repeat it.</p></div></div>
+
+      <!-- BEAT 3 -->
+      <div class="cluster" data-cam="route" data-beat="3">
+        <div class="msg you first reveal"><span class="bubble">someone grab firewood on the way</span></div>
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">I'll ping whoever passes Fairfax Hardware first.</span>
         </div>
       </div>
-      <div class="sc-phonewrap">
-        <div class="sc-phone">
-          <img class="show" src="assets/screens/screen-organize.png" alt="Home" />
-          <img src="assets/screens/screen-answers.png" alt="Answers" />
-          <img src="assets/screens/screen-map.png" alt="Map" />
-          <img src="assets/screens/screen-plans.png" alt="Plans and to-dos" />
-          <div class="sc-dots">
-            <i class="on"></i><i></i><i></i><i></i>
-          </div>
+
+      <div class="divider reveal"><span>Saturday 9:41 am</span></div>
+
+      <div class="cluster">
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Alex — you're 2 minutes from Fairfax Hardware. Firewood.</span>
+        </div>
+        <div class="name reveal">Alex</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-alex.png" alt="Alex"></span><span class="bubble">on it</span></div>
+      </div>
+
+      <div class="interstitial reveal"><div class="pill"><h2>It knows where things happen</h2><p>Conversation plus location, put to work.</p></div></div>
+
+      <!-- BEAT 4 -->
+      <div class="cluster" data-cam="out" data-beat="out">
+        <div class="name reveal">Dana</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-dana.png" alt="Dana"></span><span class="bubble">also someone needs to book the group site friday 8am sharp and confirm it fits 12</span></div>
+
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Here's what I've saved:</span>
+        </div>
+        <div class="msg fenn cont reveal">
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="card">
+            <span class="card-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4 10-10" stroke="#E2604A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Added to the list
+            </span>
+            <span class="task-row"><span class="cal-ico"><span class="m">Fri</span><span class="d">8</span></span><span><span class="task-t">Book group site</span><span class="task-s">Fri 8:00 am · reminder set</span></span></span>
+            <span class="task-row"><span class="task-check"></span><span><span class="task-t">Confirm site fits 12</span><span class="task-s">Dana</span></span></span>
+          </span>
+        </div>
+
+        <div class="msg fenn cont reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Saved where it won't get buried at message 214.</span>
         </div>
       </div>
-    </div>
-  </div>
-</section>
 
-<!-- ============ TESTIMONIALS ============ -->
-<section class="testi" id="crews">
-  <div class="wrap">
-    <div class="sec-head reveal">
-      <div class="eyebrow">From the group chat</div>
-      <h2>The chat that actually listens</h2>
-      <p>Real groups. Here's what changed when Fenn joined.</p>
-    </div>
-    <div class="testi-grid">
-      <div class="tcard reveal d1">
-        <span class="crew-tag" style="background:rgba(0,155,219,.12); color:var(--u-10);">Pickleball crew</span>
-        <p class="quote">"Someone says 'same time Saturday?' and Fenn just... handles it. Invite sent, court booked, reminder set. We didn't change how we talk, the chat got smarter."</p>
-        <div class="who">
-          <img src="assets/avatars/marcus.jpg" alt="" />
-          <div><div class="nm">Marcus T.</div><div class="rl">Sunday Dinkers, 9 players</div></div>
+      <div class="interstitial reveal"><div class="pill"><h2>The important bits, pulled out of the scroll</h2><p>Todos, dates, and details — kept, not lost.</p></div></div>
+
+      <!-- CLOSE -->
+      <div class="cluster" style="margin-top:26px;">
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">I know. Another messaging app.</span>
+        </div>
+        <div class="msg fenn cont reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Except you don't need another one — you need one that works for you. Bring one group and see.</span>
+        </div>
+        <div class="msg fenn cont reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Want me in your chats?</span>
+        </div>
+        <div class="chips reveal">
+          <a class="chip solid" href="https://apps.apple.com/us/app/fenn/id6761315757">Yes, let's go</a>
+          <a class="chip" href="/learn-more">Tell me more</a>
         </div>
       </div>
-      <div class="tcard reveal d2">
-        <span class="crew-tag" style="background:rgba(255,74,151,.12); color:var(--u-14);">School parents</span>
-        <p class="quote">"I asked in the chat who was bringing snacks and Fenn pulled up what we decided three weeks ago. I didn't even remember typing it. That's the part that got me."</p>
-        <div class="who">
-          <img src="assets/avatars/priya.jpg" alt="" />
-          <div><div class="nm">Priya R.</div><div class="rl">2nd grade room parents</div></div>
-        </div>
-      </div>
-      <div class="tcard reveal d3">
-        <span class="crew-tag" style="background:rgba(0,195,2,.12); color:var(--u-08);">Book club</span>
-        <p class="quote">"We were going in circles about where to meet. Fenn suggested a place, checked if it was open, and dropped a link. The group just said yes. First time that's ever happened."</p>
-        <div class="who">
-          <img src="assets/avatars/diana.jpg" alt="" />
-          <div><div class="nm">Diana M.</div><div class="rl">The Page Turners, 6 members</div></div>
-        </div>
-      </div>
+
     </div>
-  </div>
-</section>
+  </main>
 
-<!-- ============ CTA BAND ============ -->
-<section class="cta-band">
-  <div class="wrap">
-    <img class="mascot" src="assets/bulle/bulle-logo.svg" alt="Bulle, the Fenn mascot" />
-    <h2>Less organizing.<br />More actually going.</h2>
-    <p>Free to download. Fenn handles the rest.</p>
-    <div class="cta">
-      <a class="appstore light" href="https://apps.apple.com/us/app/fenn/id6761315757">
-        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.05 12.04c-.03-2.6 2.12-3.85 2.22-3.91-1.21-1.77-3.09-2.01-3.76-2.04-1.6-.16-3.12.94-3.93.94-.81 0-2.06-.92-3.39-.89-1.74.03-3.35 1.01-4.25 2.57-1.81 3.14-.46 7.79 1.3 10.34.86 1.25 1.88 2.65 3.22 2.6 1.29-.05 1.78-.83 3.34-.83 1.56 0 2 .83 3.37.81 1.39-.03 2.27-1.27 3.12-2.53.98-1.45 1.39-2.85 1.41-2.92-.03-.01-2.7-1.04-2.73-4.13zM14.6 4.42c.71-.86 1.19-2.06 1.06-3.25-1.02.04-2.26.68-2.99 1.54-.66.76-1.23 1.98-1.08 3.15 1.14.09 2.3-.58 3.01-1.44z"/></svg>
-        <span class="as-txt"><span class="as-sm">Download on the</span><span class="as-lg">App Store</span></span>
-      </a>
-      <span class="free-pill">Free</span>
+  <footer>
+    <div class="footer-inner">
+      <span class="fenn-foot">fenn.chat</span>
+      <span class="dot">·</span>
+      <a href="mailto:hey@fenn.chat">hey@fenn.chat</a>
+      <span class="dot">·</span>
+      <a href="/l?tab=privacy">Privacy</a>
+      <span class="dot">·</span>
+      <a href="/l?tab=terms">Terms</a>
     </div>
-  </div>
-</section>
+  </footer>
 
-<!-- ============ CONTACT ============ -->
-<section class="contact">
-  <div class="wrap">
-    <h2>Say hi to the team</h2>
-    <p>Questions, feedback, or just want to chat? We'd love to hear from you.</p>
-    <a class="mail" href="mailto:c+contact@fenn.chat">c+contact@fenn.chat</a>
+  <!-- grass strip along the bottom -->
+  <div class="grass-strip" aria-hidden="true">
+    <svg viewBox="0 0 1440 74" preserveAspectRatio="none">
+      <path fill="#8FBF6F" d="M0 24 C 180 8 320 20 480 16 C 660 11 820 26 1000 18 C 1180 10 1320 22 1440 14 L1440 74 L0 74 Z"/>
+    </svg>
   </div>
-</section>
 
-<!-- ============ FOOTER ============ -->
-<footer>
-  <div class="wrap">
-    <a class="brand" href="#top">
-      <img src="assets/bulle/bulle-logo.svg" alt="Fenn" />
-      <span>Fenn</span>
-    </a>
-    <nav class="flinks">
-      <a href="https://apps.apple.com/us/app/fenn/id6761315757">App Store</a>
-      <a href="#features">Features</a>
-      <a href="#how">How it works</a>
-      <a href="/l">Legal</a>
-      <a href="mailto:c+contact@fenn.chat">Contact</a>
-    </nav>
-    <div class="copy">© 2026 Fenn · Chat that thinks</div>
-  </div>
-</footer>
+  <script>
+    function goApp() {
+      window.location.href = 'https://apps.apple.com/us/app/fenn/id6761315757';
+    }
 
-<script src="site.js"></script>
-<script src="hero-chat.js"></script>
+    document.documentElement.classList.add('js');
+
+    /* hero pop: first scroll intent or 2.5s */
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var kicker = document.querySelector('.kicker');
+      if (!kicker || reduce) return;
+      var done = false;
+      var timer = setTimeout(pop, 2500);
+      function pop() {
+        if (done) return; done = true;
+        clearTimeout(timer);
+        kicker.classList.add('popped');
+      }
+      function onKey(e) {
+        if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'PageDown' || e.key === ' ' || e.code === 'Space') pop();
+      }
+      window.addEventListener('wheel', pop, { passive: true, once: true });
+      window.addEventListener('touchmove', pop, { passive: true, once: true });
+      window.addEventListener('keydown', onKey);
+    })();
+
+    /* "bubble" word: typing dots -> spring reveal -> pin appears */
+    (function () {
+      var wb = document.querySelector('.word-bubble');
+      if (!wb) return;
+      var fxB = wb.querySelector('.wb-fx-b');
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      function positionPin() {
+        var sy = window.scrollY || 0;
+        var b = wb.getBoundingClientRect();
+        var vw = document.documentElement.clientWidth;
+        var obstacles = [];
+        var h1 = document.querySelector('.hero-h');
+        var range = document.createRange();
+        var walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT, null);
+        var node;
+        while ((node = walker.nextNode())) {
+          if (!node.textContent.trim()) continue;
+          if (node.parentElement && node.parentElement.closest('.word-bubble')) continue;
+          range.selectNodeContents(node);
+          var rects = range.getClientRects();
+          for (var i = 0; i < rects.length; i++)
+            obstacles.push({ left: rects[i].left, right: rects[i].right, top: rects[i].top + sy, bottom: rects[i].bottom + sy });
+        }
+        function clear(r, gap) {
+          if (r.right > vw - 6) return false;
+          for (var i = 0; i < obstacles.length; i++) {
+            var o = obstacles[i];
+            var apart = r.right < o.left - gap || r.left > o.right + gap ||
+                        r.bottom < o.top - gap || r.top > o.bottom + gap;
+            if (!apart) return false;
+          }
+          return true;
+        }
+        var mid = (b.top + b.bottom) / 2 + sy;
+        var pinA = { left: b.right + 16.5, right: b.right + 35.5, top: mid - 48, bottom: mid - 22.4 };
+        wb.classList.remove('wb-a', 'wb-b');
+        if (clear(pinA, 8)) { wb.classList.add('wb-a'); return; }
+        wb.classList.add('wb-b');
+        var cy = b.top + sy;
+        var dx = 0;
+        for (var s = 0; s <= 48; s += 4) {
+          if (clear({ left: b.right + s - 12, right: b.right + s + 12, top: cy - 13, bottom: cy + 15 }, 8)) { dx = s; break; }
+        }
+        fxB.style.marginLeft = (-12 + dx) + 'px';
+      }
+      if (reduce) {
+        wb.classList.add('wb-on');
+        positionPin();
+        wb.classList.add('wb-pin-on');
+      } else {
+        setTimeout(function () { wb.classList.add('wb-on'); }, 1100);
+        setTimeout(function () { positionPin(); wb.classList.add('wb-pin-on'); }, 1600);
+      }
+      window.addEventListener('resize', function () {
+        if (wb.classList.contains('wb-pin-on')) positionPin();
+      });
+    })();
+
+    (function () {
+      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      var cam = document.getElementById('cam');
+      var CAM = {
+        wide:     'scale(1) translate(0px, 0px)',
+        winner:   'scale(1.42) translate(7%, 9%)',
+        campsite: 'scale(1.7) translate(9%, 9%)',
+        route:    'scale(1.5) translate(-3%, 3%)',
+        out:      'scale(1.06) translate(0px, 0px)'
+      };
+
+      var reveals = [].slice.call(document.querySelectorAll('.reveal'));
+      if (reduce || !('IntersectionObserver' in window)) {
+        reveals.forEach(function (el) { el.classList.add('in'); });
+      } else {
+        var io = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            var el = entry.target; io.unobserve(el);
+            var cluster = el.closest('.cluster'); var delay = 0;
+            if (cluster) {
+              var sibs = [].slice.call(cluster.querySelectorAll('.reveal'));
+              var idx = sibs.filter(function (s) { return !s.classList.contains('in'); }).indexOf(el);
+              delay = Math.max(0, idx) * 120;
+            }
+            var typing = el.hasAttribute('data-typing');
+            setTimeout(function () { typing ? revealTyping(el) : el.classList.add('in'); }, delay);
+          });
+        }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
+        reveals.forEach(function (el) { io.observe(el); });
+      }
+
+      function revealTyping(msg) {
+        var bubble = msg.querySelector('.bubble');
+        var t = document.createElement('span');
+        t.className = 'typing'; t.innerHTML = '<span></span><span></span><span></span>';
+        bubble.style.display = 'none'; msg.insertBefore(t, bubble); msg.classList.add('in');
+        setTimeout(function () { t.remove(); bubble.style.display=''; }, 760);
+      }
+
+      if (!reduce && 'IntersectionObserver' in window) {
+        var anchors = [].slice.call(document.querySelectorAll('[data-cam]'));
+        var camIO = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (!entry.isIntersecting) return;
+            var state = entry.target.getAttribute('data-cam');
+            var beat = entry.target.getAttribute('data-beat');
+            if (state && CAM[state]) cam.style.transform = CAM[state];
+            if (beat) cam.setAttribute('data-beat', beat);
+          });
+        }, { threshold: 0, rootMargin: '-45% 0px -45% 0px' });
+        anchors.forEach(function (el) { camIO.observe(el); });
+      }
+    })();
+  </script>
 </body>
 </html>
