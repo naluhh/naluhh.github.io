@@ -72,6 +72,10 @@
 
   /* ---------- Map layer ---------- */
   .map-layer { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--sky); }
+  /* fade map content out beneath the nav — prevents labels clipping behind it */
+  .map-layer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 130px;
+                       z-index: 1; pointer-events: none;
+                       background: linear-gradient(to bottom, var(--sky) 55%, transparent); }
   .map-cam {
     position: absolute; inset: -6%; will-change: transform;
     transform: scale(1) translate(0,0);
@@ -356,7 +360,7 @@
           <text x="96" y="980" font-size="15">OCEAN BEACH</text>
           <text x="382" y="682" font-size="15">TWIN PEAKS</text>
           <text x="1052" y="250" font-size="16">PRESIDIO</text>
-          <text x="1176" y="150" font-size="15">MARINA</text>
+          <text x="1176" y="230" font-size="15">MARINA</text>
           <text x="1150" y="470" font-size="16">DOWNTOWN</text>
           <text x="1150" y="690" font-size="15">THE MISSION</text>
           <text x="1236" y="900" font-size="18" opacity="0.85" transform="rotate(12 1236 900)">SAN FRANCISCO BAY</text>
@@ -411,7 +415,7 @@
   <main id="top">
     <div class="kicker" data-cam="wide" data-beat="1">
       <div class="hero-pop">
-        <h1 class="hero-h"><span class="nb">Bust your plans</span> <span class="wb-keep">out of the <span class="word-bubble"><span class="wb-word">bubble</span><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><svg class="wb-fx" aria-hidden="true" viewBox="0 0 70 70" fill="none"><g stroke="#E2604A" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"><path class="wb-t1" d="M10 59.5 L14.5 54.5"></path><path class="wb-t2" d="M17 51 L21.5 46"></path><path class="wb-t3" d="M26.5 41 L31 36"></path></g><g class="wb-pin" transform="translate(34,36)"><path d="M0 0 C -7.5 -7.5 -10.5 -12 -10.5 -16.5 C -10.5 -23 -5.8 -27.5 0 -27.5 C 5.8 -27.5 10.5 -23 10.5 -16.5 C 10.5 -12 7.5 -7.5 0 0 Z" fill="#E2604A"></path><circle cy="-17" r="3.6" fill="#FFFFFF"></circle></g></svg></span></span></h1>
+        <h1 class="hero-h"><span class="nb">Bust your plans</span><br><span class="wb-keep">out of the <span class="word-bubble"><span class="wb-word">bubble</span><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><svg class="wb-fx" aria-hidden="true" viewBox="0 0 70 70" fill="none"><g stroke="#E2604A" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"><path class="wb-t1" d="M10 59.5 L14.5 54.5"></path><path class="wb-t2" d="M17 51 L21.5 46"></path><path class="wb-t3" d="M26.5 41 L34 36"></path></g><g class="wb-pin" transform="translate(34,36)"><path d="M0 0 C -7.5 -7.5 -10.5 -12 -10.5 -16.5 C -10.5 -23 -5.8 -27.5 0 -27.5 C 5.8 -27.5 10.5 -23 10.5 -16.5 C 10.5 -12 7.5 -7.5 0 0 Z" fill="#E2604A"></path><circle cy="-17" r="3.6" fill="#FFFFFF"></circle></g></svg></span></span></h1>
       </div>
       <p class="hero-sub">Fenn lives in your group chat — it remembers, reminds, and knows where things happen.</p>
     </div>
