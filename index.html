@@ -165,6 +165,7 @@
                  border-radius: 999px 999px 999px 6px;
                  box-shadow: 0 0.09em 0.32em rgba(43,74,92,0.16);
                  vertical-align: baseline; transform-origin: left bottom;
+                 overflow: visible;  /* explicit — prevents Safari border-radius child clipping */
                  animation: wbIn 180ms cubic-bezier(.34,1.56,.64,1) both; }
   .wb-word { display: inline-block; transform-origin: center;
              animation: wbWord 220ms cubic-bezier(.34,1.56,.64,1) 980ms both; }
@@ -196,6 +197,24 @@
                      78% { transform: translate(36.5px, 33.5px) scale(1.02); }
                      100% { transform: translate(34px, 36px) scale(1); opacity: 1; } }
   @keyframes wbTrail { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ---------- Badge mode (phones ≤ 480px): pin overlaps bubble corner, no trail ----------
+     Tethered mode (> 480px): pin in sky connected by trail — verified safe at 481px+.
+     Pin tip in SVG sits at (34/70 × 1.5em, 36/70 × 1.5em) = (0.729em, 0.771em) within
+     the .wb-fx element. Badge: translate so that point lands on the bubble's top-right
+     corner, then scale 0.85 around that same point. Pin renders ≤ bubble.right + 8px
+     at all phone widths — well clear of even a 320px viewport. */
+  @media (max-width: 480px) {
+    .wb-t1, .wb-t2, .wb-t3 { display: none !important; }
+    .wb-pin { animation: none !important; }   /* SVG attr translate(34,36) takes effect */
+    .wb-fx {
+      left: 100%; top: 0;
+      margin-left: -0.729em;   /* -(34/70 × 1.5em): pin tip x → bubble right edge */
+      margin-top:  -0.771em;   /* -(36/70 × 1.5em): pin tip y → bubble top edge    */
+      transform: scale(0.85);
+      transform-origin: 0.729em 0.771em;  /* scale from the pin tip = the corner anchor */
+    }
+  }
 
   /* reduced motion: render t=1700ms frame statically, no animation at all */
   @media (prefers-reduced-motion: reduce) {
