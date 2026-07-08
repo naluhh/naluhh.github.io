@@ -62,7 +62,7 @@
   }
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  html { scroll-behavior: smooth; }
+  html { scroll-behavior: smooth; overflow-x: clip; }
   body {
     font-family: var(--font); color: var(--ink); background: var(--sky);
     -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility;
@@ -135,71 +135,68 @@
   /* ---------- Column ---------- */
   main { position: relative; z-index: 3; padding: 0 20px; }
 
-  .kicker { text-align: center; padding: clamp(40px, 5vw, 88px) 20px clamp(10px, 1.5vw, 28px); }
-  /* hero intro: headline starts inside a white bubble that pops once, leaving it free on the sky */
-  .hero-pop { position: relative; display: inline-block; padding: clamp(14px, 2.2vw, 32px) clamp(18px, 3vw, 40px); }
-  .hero-bubble { position: absolute; inset: 0; z-index: 0; background: var(--white); border-radius: 28px; box-shadow: var(--bubble-shadow); }
-  .hero-burst { position: absolute; left: 50%; top: 50%; width: 118%; z-index: 0; pointer-events: none; opacity: 0;
-                transform: translate(-50%,-50%) scale(.7); }
-  .hero-h { position: relative; z-index: 1; font-size: clamp(44px, 5vw, 112px); font-weight: 700; letter-spacing: -0.04em; line-height: 1.06; color: var(--ink); }
-  .hero-sub { font-size: clamp(16px, 1.2vw, 21px); color: var(--label); letter-spacing: -0.01em; margin: clamp(10px, 0.8vw, 20px) auto 0; max-width: clamp(380px, 44vw, 680px); opacity: 0; }
-  /* fixed ~0.8s pop sequence, fired once by JS (first scroll intent or 2.5s) */
-  .kicker.popped .hero-bubble { animation: heroPop .34s cubic-bezier(.55,0,.65,.35) forwards; }
-  .kicker.popped .hero-burst { animation: heroBurst .5s cubic-bezier(.2,.7,.3,1) .05s forwards; }
-  .kicker.popped .hero-sub { animation: heroSub .45s ease .32s forwards; }
-  /* no-JS fallback: headline free from the start */
-  html:not(.js) .hero-bubble, html:not(.js) .hero-burst { display: none; }
-  html:not(.js) .hero-sub { opacity: 1; }
-  @keyframes heroPop { from { transform: scale(1); opacity: 1; } to { transform: scale(1.18); opacity: 0; } }
-  @keyframes heroBurst { 0% { transform: translate(-50%,-50%) scale(.7); opacity: 0; }
-                         30% { opacity: .95; }
-                         100% { transform: translate(-50%,-50%) scale(1.2); opacity: 0; } }
-  @keyframes heroSub { to { opacity: 1; } }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-bubble, .hero-burst { display: none !important; }
-    .hero-sub { opacity: 1 !important; animation: none !important; }
-  }
+  /* full-bleed hero band so the headline can grow to 112px */
+  .kicker { text-align: center; width: 100vw; margin-left: calc(50% - 50vw);
+            padding: clamp(56px, 6vw, 128px) 12px clamp(10px, 2vw, 44px); }
 
-  /* the word "bubble" rendered as an actual chat bubble */
-  .word-bubble { position: relative; display: inline-block; padding: 0.09em 0.5em;
+  /* headline sits directly on the sky — no card or background */
+  .hero-pop { position: relative; display: inline-block; font-size: clamp(44px, 5vw, 112px);
+              padding: 0.5em min(0.73em, 1.5vw); }
+  .hero-h { position: relative; z-index: 1; font-size: 1em; font-weight: 700;
+            letter-spacing: -0.035em; line-height: 1.12; color: var(--ink); }
+
+  /* subline fades 0→1 over 300ms at t=0, independent of headline sequence */
+  .hero-sub { font-size: clamp(16px, 1.2vw, 21px); color: var(--label); letter-spacing: -0.01em;
+              margin: 0.7em auto 0; max-width: 27em;
+              animation: heroSubIn 300ms ease both; }
+  @keyframes heroSubIn { from { opacity: 0; } }
+
+  /* line breaking: "your plans" never splits; 3 lines only below 400px */
+  .wb-keep, .nb { white-space: nowrap; }
+  @media (max-width: 399px) { .wb-keep { white-space: normal; } }
+
+  /* "bubble" word-bubble: final size from first paint, never resizes */
+  .word-bubble { position: relative; display: inline-block; padding: 0.06em 0.3em;
                  background: var(--white); color: var(--ink);
-                 border-radius: 999em 999em 999em 0.14em;
+                 border-radius: 999px 999px 999px 6px;
                  box-shadow: 0 0.09em 0.32em rgba(43,74,92,0.16);
-                 vertical-align: baseline; }
-  .wb-dots { display: inline-flex; gap: 0.11em; align-items: center; }
-  .wb-dots i { width: 0.18em; height: 0.18em; border-radius: 50%; background: var(--label); opacity: .45;
-               animation: wbDot 1s ease-in-out infinite; }
-  .wb-dots i:nth-child(2) { animation-delay: .15s; }
-  .wb-dots i:nth-child(3) { animation-delay: .3s; }
-  .wb-word { display: none; }
-  .wb-keep { white-space: nowrap; }
-  @media (max-width: 479px) { .wb-keep { white-space: normal; } }
-  .wb-fx { position: absolute; opacity: 0; pointer-events: none; z-index: 2; display: none; }
-  .wb-fx-a { left: 100%; top: 50%; width: 0.9em; height: 1.18em; margin-top: -1.16em;
-             --pin-from: translate(-0.45em, 0.64em); }
-  .wb-fx-b { left: 100%; top: 0; width: 0.55em; height: 0.64em; margin-left: -0.27em; margin-top: -0.3em;
-             --pin-from: translate(-0.23em, 0.32em); }
-  .word-bubble.wb-a .wb-fx-a, .word-bubble.wb-b .wb-fx-b { display: block; }
-  .wb-pin-g { transform-box: fill-box; transform-origin: center; }
-  .word-bubble.wb-on .wb-dots { display: none; }
-  .word-bubble.wb-on .wb-word { display: inline-block; animation: wbSpring .45s cubic-bezier(.34,1.56,.64,1) both; }
-  .word-bubble.wb-pin-on .wb-fx { animation: wbFx .25s ease forwards; }
-  .word-bubble.wb-pin-on .wb-pin-g { animation: wbPinG .55s cubic-bezier(.2,.7,.3,1) both; }
-  @keyframes wbDot { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-0.09em); } }
-  @keyframes wbSpring { from { transform: scale(.4); opacity: 0; } to { transform: scale(1); opacity: 1; } }
-  @keyframes wbFx { to { opacity: 1; } }
-  @keyframes wbPinG { from { transform: var(--pin-from, translate(-0.77em, 0.91em)) scale(.35); opacity: 0; }
-                      to { transform: none; opacity: 1; } }
-  /* final state statically: reduced motion or no JS */
-  html:not(.js) .wb-dots { display: none; }
-  html:not(.js) .wb-word { display: inline-block; }
-  html:not(.js) .word-bubble .wb-fx { opacity: 1; }
+                 vertical-align: baseline; transform-origin: left bottom;
+                 animation: wbIn 180ms cubic-bezier(.34,1.56,.64,1) both; }
+  .wb-word { display: inline-block; transform-origin: center;
+             animation: wbWord 220ms cubic-bezier(.34,1.56,.64,1) 980ms both; }
+  .wb-dots { position: absolute; inset: 0; display: flex; gap: 0.12em;
+             align-items: center; justify-content: center;
+             opacity: 0; animation: wbDots 980ms linear; }
+  .wb-dots i { width: 0.17em; height: 0.17em; border-radius: 50%; background: var(--ink); opacity: .35;
+               animation: wbPulse 450ms ease-in-out 180ms 2; }
+  .wb-dots i:nth-child(2) { animation-delay: 280ms; }
+  .wb-dots i:nth-child(3) { animation-delay: 380ms; }
+  @keyframes wbIn { from { transform: scale(.88); } to { transform: scale(1); } }
+  @keyframes wbDots { 0% { opacity: 0; } 18% { opacity: 1; } 92% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes wbPulse { 0%, 100% { transform: translateY(0); opacity: .35; }
+                       50% { transform: translateY(-0.045em); opacity: .7; } }
+  @keyframes wbWord { 0% { opacity: 0; transform: scale(.92); }
+                      60% { opacity: 1; transform: scale(1.02); }
+                      100% { opacity: 1; transform: scale(1); } }
+
+  /* pin + trail */
+  .wb-fx { position: absolute; left: 100%; top: 0; width: 1.5em; height: 1.5em;
+           margin-left: -0.171em; margin-top: -1.329em;
+           pointer-events: none; z-index: 2; overflow: visible; }
+  .wb-pin { animation: wbPin 350ms cubic-bezier(.22,.9,.35,1) 1350ms both; }
+  .wb-t1 { animation: wbTrail 200ms ease 1350ms both; }
+  .wb-t2 { animation: wbTrail 200ms ease 1410ms both; }
+  .wb-t3 { animation: wbTrail 200ms ease 1470ms both; }
+  @keyframes wbPin { 0% { transform: translate(8px, 62px) scale(.6); opacity: 0; }
+                     12% { opacity: 1; }
+                     78% { transform: translate(36.5px, 33.5px) scale(1.02); }
+                     100% { transform: translate(34px, 36px) scale(1); opacity: 1; } }
+  @keyframes wbTrail { from { opacity: 0; } to { opacity: 1; } }
+
+  /* reduced motion: render t=1700ms frame statically, no animation at all */
   @media (prefers-reduced-motion: reduce) {
-    .wb-dots { display: none !important; }
-    .wb-word { display: inline-block !important; animation: none !important; }
-    .word-bubble .wb-fx { animation: none !important; }
-    .word-bubble.wb-pin-on .wb-fx { opacity: 1 !important; }
-    .wb-pin-g { animation: none !important; }
+    .word-bubble, .wb-word, .wb-dots, .wb-dots i,
+    .wb-pin, .wb-t1, .wb-t2, .wb-t3, .hero-sub { animation: none !important; }
   }
 
   .thread { display: flex; flex-direction: column; max-width: var(--col); margin: 0 auto; }
@@ -414,18 +411,7 @@
   <main id="top">
     <div class="kicker" data-cam="wide" data-beat="1">
       <div class="hero-pop">
-        <span class="hero-bubble" aria-hidden="true"></span>
-        <svg class="hero-burst" aria-hidden="true" viewBox="0 0 200 120" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round">
-          <line x1="180" y1="60" x2="198" y2="60"/>
-          <line x1="156.6" y1="89.7" x2="169.3" y2="99.6"/>
-          <line x1="100" y1="102" x2="100" y2="116"/>
-          <line x1="43.4" y1="89.7" x2="30.7" y2="99.6"/>
-          <line x1="20" y1="60" x2="2" y2="60"/>
-          <line x1="43.4" y1="30.3" x2="30.7" y2="20.4"/>
-          <line x1="100" y1="18" x2="100" y2="4"/>
-          <line x1="156.6" y1="30.3" x2="169.3" y2="20.4"/>
-        </svg>
-        <h1 class="hero-h">Bust your plans<br class="hero-break"><span class="wb-keep">out of the <span class="word-bubble wb-b"><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><span class="wb-word">bubble</span><svg class="wb-fx wb-fx-a" aria-hidden="true" viewBox="0 0 40 52" fill="none"><path d="M1 51 Q 9 42 18 28" stroke="#E2604A" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="5 6" opacity="0.85"></path><g class="wb-pin-g"><path d="M26 3 c-5.5 0 -9.5 4.1 -9.5 8.7 0 6.1 9.5 13.8 9.5 13.8 s9.5 -7.7 9.5 -13.8 C35.5 7.1 31.5 3 26 3 Z" fill="#E2604A"></path><circle cx="26" cy="11.5" r="3" fill="#FFFFFF"></circle></g></svg><svg class="wb-fx wb-fx-b" aria-hidden="true" viewBox="0 0 24 28" fill="none"><g class="wb-pin-g"><path d="M12 2 c-5.5 0 -9.5 4.1 -9.5 8.7 0 6.1 9.5 13.8 9.5 13.8 s9.5 -7.7 9.5 -13.8 C21.5 6.1 17.5 2 12 2 Z" fill="#E2604A"></path><circle cx="12" cy="10.5" r="3" fill="#FFFFFF"></circle></g></svg></span></span></h1>
+        <h1 class="hero-h"><span class="nb">Bust your plans</span> <span class="wb-keep">out of the <span class="word-bubble"><span class="wb-word">bubble</span><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><svg class="wb-fx" aria-hidden="true" viewBox="0 0 70 70" fill="none"><g stroke="#E2604A" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"><path class="wb-t1" d="M10 59.5 L14.5 54.5"></path><path class="wb-t2" d="M17 51 L21.5 46"></path><path class="wb-t3" d="M26.5 41 L31 36"></path></g><g class="wb-pin" transform="translate(34,36)"><path d="M0 0 C -7.5 -7.5 -10.5 -12 -10.5 -16.5 C -10.5 -23 -5.8 -27.5 0 -27.5 C 5.8 -27.5 10.5 -23 10.5 -16.5 C 10.5 -12 7.5 -7.5 0 0 Z" fill="#E2604A"></path><circle cy="-17" r="3.6" fill="#FFFFFF"></circle></g></svg></span></span></h1>
       </div>
       <p class="hero-sub">Fenn lives in your group chat — it remembers, reminds, and knows where things happen.</p>
     </div>
@@ -593,85 +579,6 @@
     }
 
     document.documentElement.classList.add('js');
-
-    /* hero pop: first scroll intent or 2.5s */
-    (function () {
-      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      var kicker = document.querySelector('.kicker');
-      if (!kicker || reduce) return;
-      var done = false;
-      var timer = setTimeout(pop, 2500);
-      function pop() {
-        if (done) return; done = true;
-        clearTimeout(timer);
-        kicker.classList.add('popped');
-      }
-      function onKey(e) {
-        if (e.key === 'ArrowDown' || e.key === 'ArrowUp' || e.key === 'PageDown' || e.key === ' ' || e.code === 'Space') pop();
-      }
-      window.addEventListener('wheel', pop, { passive: true, once: true });
-      window.addEventListener('touchmove', pop, { passive: true, once: true });
-      window.addEventListener('keydown', onKey);
-    })();
-
-    /* "bubble" word: typing dots -> spring reveal -> pin appears */
-    (function () {
-      var wb = document.querySelector('.word-bubble');
-      if (!wb) return;
-      var fxB = wb.querySelector('.wb-fx-b');
-      var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      function positionPin() {
-        var sy = window.scrollY || 0;
-        var b = wb.getBoundingClientRect();
-        var vw = document.documentElement.clientWidth;
-        var obstacles = [];
-        var h1 = document.querySelector('.hero-h');
-        var range = document.createRange();
-        var walker = document.createTreeWalker(h1, NodeFilter.SHOW_TEXT, null);
-        var node;
-        while ((node = walker.nextNode())) {
-          if (!node.textContent.trim()) continue;
-          if (node.parentElement && node.parentElement.closest('.word-bubble')) continue;
-          range.selectNodeContents(node);
-          var rects = range.getClientRects();
-          for (var i = 0; i < rects.length; i++)
-            obstacles.push({ left: rects[i].left, right: rects[i].right, top: rects[i].top + sy, bottom: rects[i].bottom + sy });
-        }
-        function clear(r, gap) {
-          if (r.right > vw - 6) return false;
-          for (var i = 0; i < obstacles.length; i++) {
-            var o = obstacles[i];
-            var apart = r.right < o.left - gap || r.left > o.right + gap ||
-                        r.bottom < o.top - gap || r.top > o.bottom + gap;
-            if (!apart) return false;
-          }
-          return true;
-        }
-        var fs = parseFloat(getComputedStyle(h1).fontSize); // hero-h px font-size at current vw
-        var mid = (b.top + b.bottom) / 2 + sy;
-        var pinA = { left: b.right + 0.375*fs, right: b.right + 0.807*fs, top: mid - 1.09*fs, bottom: mid - 0.51*fs };
-        wb.classList.remove('wb-a', 'wb-b');
-        if (clear(pinA, 0.18*fs)) { wb.classList.add('wb-a'); return; }
-        wb.classList.add('wb-b');
-        var cy = b.top + sy;
-        var dx = 0;
-        for (var s = 0; s <= 1.09*fs; s += 0.09*fs) {
-          if (clear({ left: b.right + s - 0.27*fs, right: b.right + s + 0.27*fs, top: cy - 0.3*fs, bottom: cy + 0.34*fs }, 0.18*fs)) { dx = s; break; }
-        }
-        fxB.style.marginLeft = (-0.27*fs + dx) + 'px';
-      }
-      if (reduce) {
-        wb.classList.add('wb-on');
-        positionPin();
-        wb.classList.add('wb-pin-on');
-      } else {
-        setTimeout(function () { wb.classList.add('wb-on'); }, 1100);
-        setTimeout(function () { positionPin(); wb.classList.add('wb-pin-on'); }, 1600);
-      }
-      window.addEventListener('resize', function () {
-        if (wb.classList.contains('wb-pin-on')) positionPin();
-      });
-    })();
 
     (function () {
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
