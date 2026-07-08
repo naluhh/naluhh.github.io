@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Fenn — Chat that thinks</title>
-<meta name="description" content="Fenn lives in your group chat — it remembers, reminds, and knows where things happen." />
+<title>Fenn — The messenger built for kid chaos</title>
+<meta name="description" content="Fenn is the group chat for your village — with a helper inside who tracks the plans, the reminders, and whose turn it is." />
 
 <link rel="canonical" href="https://fenn.chat/" />
 <meta name="theme-color" content="#BADDEB" />
@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="Fenn" />
 <meta property="og:url" content="https://fenn.chat/" />
 <meta property="og:title" content="Add me on Fenn" />
-<meta property="og:description" content="Fenn lives in your group chat — it remembers, reminds, and knows where things happen." />
+<meta property="og:description" content="Fenn is the group chat for your village — with a helper inside who tracks the plans, the reminders, and whose turn it is." />
 <meta property="og:image" content="https://fenn.chat/assets/og-image.png?v=10" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -27,15 +27,15 @@
 <!-- Twitter / X -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="Add me on Fenn" />
-<meta name="twitter:description" content="Fenn lives in your group chat — it remembers, reminds, and knows where things happen." />
+<meta name="twitter:description" content="Fenn is the group chat for your village — with a helper inside who tracks the plans, the reminders, and whose turn it is." />
 <meta name="twitter:image" content="https://fenn.chat/assets/og-image.png?v=10" />
 
 <style>
   /* ============================================================
-     fenn.chat — marketing homepage v4
-     One scrolling group chat (camping weekend) over a white
-     chalk-line map on a sunny sky, with a grass strip along the
-     bottom. STRICT SINGLE PALETTE:
+     fenn.chat — marketing homepage v5 (kid-chaos positioning)
+     One scrolling group chat (a village running the week) over a
+     white chalk-line map on a sunny sky, grass strip at bottom.
+     STRICT SINGLE PALETTE:
        sky #BADDEB · white lines/bubbles · deep blue #3D7391/#2B4A5C
        coral #E2604A = FENN ONLY · grass #8FBF6F (bottom strip only)
      ============================================================ */
@@ -72,14 +72,10 @@
 
   /* ---------- Map layer ---------- */
   .map-layer { position: fixed; inset: 0; z-index: 0; overflow: hidden; background: var(--sky); }
-  /* fade map content out beneath the nav — prevents labels clipping behind it */
-  .map-layer::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 130px;
-                       z-index: 1; pointer-events: none;
-                       background: linear-gradient(to bottom, var(--sky) 55%, transparent); }
   .map-cam {
     position: absolute; inset: -6%; will-change: transform;
     transform: scale(1) translate(0,0);
-    transition: transform 820ms cubic-bezier(.4,0,.2,1);
+    transition: transform 900ms cubic-bezier(.4,0,.2,1);
     transform-origin: 50% 45%;
   }
   .map-cam svg { width: 100%; height: 100%; display: block; }
@@ -88,24 +84,143 @@
   .cloud.b { animation-duration: 82s; animation-direction: alternate-reverse; }
   @keyframes drift { from { transform: translateX(-24px); } to { transform: translateX(28px); } }
 
-  /* winner coral pin drops in after the vote */
-  #pin-winner { opacity: 0; transform: translateY(-14px); transition: opacity 600ms ease, transform 600ms cubic-bezier(.2,.8,.3,1); }
-  .map-cam[data-beat="winner"] #pin-winner,
-  .map-cam[data-beat="campsite"] #pin-winner,
-  .map-cam[data-beat="3"] #pin-winner,
-  .map-cam[data-beat="out"] #pin-winner { opacity: 1; transform: translateY(0); }
+  /* ---------- Story choreography (state = data-beat on .map-cam) ----------
+     The map is Fenn's live map of the village. Beats:
+       1 -> resolve (school pin drops) -> remind (dots shuffle: proof of life)
+       -> party (Rosa cooks) -> thu (camera zooms to school, Callie drives)
+       -> eta (geofence ping) -> exhale (settle) -> rsvp (camera wide)
+       -> ggp (party pin drops) -> handoff (Rosa gets pickup) -> close (the party). */
 
-  /* beat-3 fx */
-  #fx { opacity: 0; transition: opacity 650ms ease; }
-  .map-cam[data-beat="3"] #fx { opacity: 1; }
-  #route { opacity: 0; transition: opacity 700ms ease; animation: dashflow 1.5s linear infinite; }
-  .map-cam[data-beat="3"] #route { opacity: 1; }
-  @keyframes dashflow { to { stroke-dashoffset: -150; } }
-  .geo { transform-box: fill-box; transform-origin: center; }
-  .map-cam[data-beat="3"] .geo { animation: pulse 2.4s ease-out infinite; }
-  .map-cam[data-beat="3"] .geo.g2 { animation-delay: .5s; }
-  .map-cam[data-beat="3"] .geo.g3 { animation-delay: 1s; }
-  @keyframes pulse { 0% { transform: scale(.45); opacity: .65; } 70% { transform: scale(1.3); opacity: 0; } 100% { opacity: 0; } }
+  /* member dots: ambient, slower than the camera */
+  .dot { transition: transform 1600ms cubic-bezier(.4,0,.2,1); }
+  .dot-you    { transform: translate(340px, 880px); }   /* Jess */
+  .dot-dave   { transform: translate(374px, 918px); }
+  .dot-priya  { transform: translate(1200px, 820px); }
+  .dot-marcus { transform: translate(1242px, 932px); }
+  .dot-rosa   { transform: translate(1150px, 640px); }
+  .dot-callie { transform: translate(300px, 1000px); }
+
+  /* remind: same city, different hour — dots relocate quietly */
+  .map-cam[data-beat="remind"] .dot-priya,  .map-cam[data-beat="party"] .dot-priya,
+  .map-cam[data-beat="thu"] .dot-priya,     .map-cam[data-beat="eta"] .dot-priya,
+  .map-cam[data-beat="exhale"] .dot-priya,  .map-cam[data-beat="rsvp"] .dot-priya,
+  .map-cam[data-beat="ggp"] .dot-priya,     .map-cam[data-beat="handoff"] .dot-priya { transform: translate(1136px, 856px); }
+  .map-cam[data-beat="remind"] .dot-marcus, .map-cam[data-beat="party"] .dot-marcus,
+  .map-cam[data-beat="thu"] .dot-marcus,    .map-cam[data-beat="eta"] .dot-marcus,
+  .map-cam[data-beat="exhale"] .dot-marcus, .map-cam[data-beat="rsvp"] .dot-marcus,
+  .map-cam[data-beat="ggp"] .dot-marcus,    .map-cam[data-beat="handoff"] .dot-marcus { transform: translate(1172px, 760px); }
+
+  /* Thursday: Callie drives to school */
+  .map-cam[data-beat="thu"] .dot-callie { transform: translate(326px, 660px); }
+  .map-cam[data-beat="eta"] .dot-callie { transform: translate(334px, 588px); }
+  .map-cam[data-beat="exhale"] .dot-callie, .map-cam[data-beat="rsvp"] .dot-callie,
+  .map-cam[data-beat="ggp"] .dot-callie,    .map-cam[data-beat="handoff"] .dot-callie { transform: translate(336px, 562px); }
+
+  /* handoff: Rosa heads for pickup */
+  .map-cam[data-beat="handoff"] .dot-rosa { transform: translate(368px, 578px); }
+
+  /* close: everyone gathers at the party in Golden Gate Park */
+  .map-cam[data-beat="close"] .dot-you    { transform: translate(316px, 782px); }
+  .map-cam[data-beat="close"] .dot-dave   { transform: translate(352px, 800px); }
+  .map-cam[data-beat="close"] .dot-priya  { transform: translate(340px, 768px); }
+  .map-cam[data-beat="close"] .dot-marcus { transform: translate(364px, 786px); }
+  .map-cam[data-beat="close"] .dot-rosa   { transform: translate(326px, 758px); }
+  .map-cam[data-beat="close"] .dot-callie { transform: translate(294px, 792px); }
+
+  /* status badges (emoji inferred from location) */
+  .dot .be { display: none; }
+  .map-cam[data-beat="1"] .be-home, .map-cam[data-beat="resolve"] .be-home { display: block; }
+  .map-cam[data-beat="remind"] .dot-you .be-home,  .map-cam[data-beat="party"] .dot-you .be-home,
+  .map-cam[data-beat="thu"] .dot-you .be-home,     .map-cam[data-beat="eta"] .dot-you .be-home,
+  .map-cam[data-beat="exhale"] .dot-you .be-home,  .map-cam[data-beat="rsvp"] .dot-you .be-home,
+  .map-cam[data-beat="ggp"] .dot-you .be-home,     .map-cam[data-beat="handoff"] .dot-you .be-home { display: block; }
+  .map-cam[data-beat="remind"] .dot-callie .be-home, .map-cam[data-beat="party"] .dot-callie .be-home { display: block; }
+  /* Dave's at work until the party */
+  .map-cam[data-beat="1"] .dot-dave .be-work,      .map-cam[data-beat="resolve"] .dot-dave .be-work,
+  .map-cam[data-beat="remind"] .dot-dave .be-work, .map-cam[data-beat="party"] .dot-dave .be-work,
+  .map-cam[data-beat="thu"] .dot-dave .be-work,    .map-cam[data-beat="eta"] .dot-dave .be-work,
+  .map-cam[data-beat="exhale"] .dot-dave .be-work, .map-cam[data-beat="rsvp"] .dot-dave .be-work,
+  .map-cam[data-beat="ggp"] .dot-dave .be-work,    .map-cam[data-beat="handoff"] .dot-dave .be-work { display: block; }
+  .map-cam[data-beat="1"] .dot-dave .be-home, .map-cam[data-beat="resolve"] .dot-dave .be-home { display: none; }
+  .map-cam[data-beat="remind"] .dot-priya .be-shop,  .map-cam[data-beat="party"] .dot-priya .be-shop,
+  .map-cam[data-beat="thu"] .dot-priya .be-shop,     .map-cam[data-beat="eta"] .dot-priya .be-shop,
+  .map-cam[data-beat="exhale"] .dot-priya .be-shop,  .map-cam[data-beat="rsvp"] .dot-priya .be-shop,
+  .map-cam[data-beat="ggp"] .dot-priya .be-shop,     .map-cam[data-beat="handoff"] .dot-priya .be-shop { display: block; }
+  .map-cam[data-beat="remind"] .dot-marcus .be-car,  .map-cam[data-beat="party"] .dot-marcus .be-car,
+  .map-cam[data-beat="thu"] .dot-marcus .be-car,     .map-cam[data-beat="eta"] .dot-marcus .be-car,
+  .map-cam[data-beat="exhale"] .dot-marcus .be-car,  .map-cam[data-beat="rsvp"] .dot-marcus .be-car,
+  .map-cam[data-beat="ggp"] .dot-marcus .be-car,     .map-cam[data-beat="handoff"] .dot-marcus .be-car { display: block; }
+  /* Rosa cooks from the birthday ask on; drives at the handoff */
+  .map-cam[data-beat="party"] .dot-rosa .be-cook, .map-cam[data-beat="thu"] .dot-rosa .be-cook,
+  .map-cam[data-beat="eta"] .dot-rosa .be-cook,   .map-cam[data-beat="exhale"] .dot-rosa .be-cook,
+  .map-cam[data-beat="rsvp"] .dot-rosa .be-cook,  .map-cam[data-beat="ggp"] .dot-rosa .be-cook { display: block; }
+  .map-cam[data-beat="1"] .dot-rosa .be-home, .map-cam[data-beat="resolve"] .dot-rosa .be-home,
+  .map-cam[data-beat="remind"] .dot-rosa .be-home { display: block; }
+  .map-cam[data-beat="handoff"] .dot-rosa .be-car { display: block; }
+  /* Callie drives Thursday */
+  .map-cam[data-beat="thu"] .dot-callie .be-car, .map-cam[data-beat="eta"] .dot-callie .be-car,
+  .map-cam[data-beat="exhale"] .dot-callie .be-car, .map-cam[data-beat="rsvp"] .dot-callie .be-car,
+  .map-cam[data-beat="ggp"] .dot-callie .be-car, .map-cam[data-beat="handoff"] .dot-callie .be-car { display: block; }
+  .map-cam[data-beat="close"] .badge { display: none; }
+
+  /* rings go coral only when Fenn acts on someone */
+  .dot .ring { stroke: rgba(43,74,92,0.25); transition: stroke 400ms ease; }
+  .map-cam[data-beat="eta"] .dot-callie .ring, .map-cam[data-beat="exhale"] .dot-callie .ring { stroke: #E2604A; }
+  .map-cam[data-beat="handoff"] .dot-rosa .ring { stroke: #E2604A; }
+
+  /* school pin drops with a settle bounce when Fenn resolves practice (first coral on the map) */
+  #pin-school { opacity: 0; transform: translate(336px, 528px);
+                transition: opacity 450ms ease, transform 600ms cubic-bezier(.34,1.56,.64,1); }
+  .map-cam[data-beat="resolve"] #pin-school, .map-cam[data-beat="remind"] #pin-school,
+  .map-cam[data-beat="party"] #pin-school,   .map-cam[data-beat="thu"] #pin-school,
+  .map-cam[data-beat="eta"] #pin-school,     .map-cam[data-beat="exhale"] #pin-school,
+  .map-cam[data-beat="rsvp"] #pin-school,    .map-cam[data-beat="ggp"] #pin-school,
+  .map-cam[data-beat="handoff"] #pin-school, .map-cam[data-beat="close"] #pin-school { opacity: 1; transform: translate(336px, 555px); }
+
+  /* party pin drops on Golden Gate Park when Jess announces Leo's 7th */
+  #pin-party { opacity: 0; transform: translate(300px, 750px);
+               transition: opacity 450ms ease, transform 600ms cubic-bezier(.34,1.56,.64,1); }
+  .map-cam[data-beat="ggp"] #pin-party, .map-cam[data-beat="handoff"] #pin-party,
+  .map-cam[data-beat="close"] #pin-party { opacity: 1; transform: translate(300px, 778px); }
+
+  /* coral routes (Fenn's actions): Callie -> school; Rosa -> school */
+  #route1, #route2 { opacity: 0; transition: opacity 800ms ease; animation: dashflow 1.6s linear infinite; }
+  .map-cam[data-beat="thu"] #route1, .map-cam[data-beat="eta"] #route1,
+  .map-cam[data-beat="exhale"] #route1 { opacity: 0.85; }
+  .map-cam[data-beat="handoff"] #route2 { opacity: 0.6; }
+  .map-cam[data-beat="close"] #route2 { opacity: 0.2; }
+  @keyframes dashflow { to { stroke-dashoffset: -160; } }
+
+  /* school geofence: pulses while Fenn's ETA ping is live, settles to a faint ring */
+  #geofence { opacity: 0; transition: opacity 600ms ease; }
+  .map-cam[data-beat="eta"] #geofence, .map-cam[data-beat="exhale"] #geofence,
+  .map-cam[data-beat="rsvp"] #geofence, .map-cam[data-beat="ggp"] #geofence,
+  .map-cam[data-beat="handoff"] #geofence { opacity: 1; }
+  .map-cam[data-beat="close"] #geofence { opacity: 0.25; }
+  .geo { transform-box: fill-box; transform-origin: center; opacity: 0; }
+  .map-cam[data-beat="eta"] .geo { animation: pulse 2s ease-out infinite; }
+  .map-cam[data-beat="eta"] .geo.g2 { animation-delay: 1s; }
+  #geo-static { opacity: 0; transition: opacity 600ms ease; }
+  .map-cam[data-beat="exhale"] #geo-static, .map-cam[data-beat="rsvp"] #geo-static,
+  .map-cam[data-beat="ggp"] #geo-static, .map-cam[data-beat="handoff"] #geo-static { opacity: 0.35; }
+  @keyframes pulse { 0% { transform: scale(.4); opacity: .6; } 70% { transform: scale(1.35); opacity: 0; } 100% { opacity: 0; } }
+
+  /* close: map recedes so the fourth-wall close owns the page */
+  #world { transition: opacity 700ms ease; }
+  .map-cam[data-beat="close"] #world { opacity: 0.85; }
+
+  /* no-JS: one static composition — the party (close) state */
+  html:not(.js) #pin-school { opacity: 1; transform: translate(336px, 555px); }
+  html:not(.js) #pin-party { opacity: 1; transform: translate(300px, 778px); }
+  html:not(.js) #route2 { opacity: 0.2; }
+  html:not(.js) #geofence { opacity: 0.25; }
+  html:not(.js) .badge { display: none; }
+  html:not(.js) .dot-you    { transform: translate(316px, 782px); }
+  html:not(.js) .dot-dave   { transform: translate(352px, 800px); }
+  html:not(.js) .dot-priya  { transform: translate(340px, 768px); }
+  html:not(.js) .dot-marcus { transform: translate(364px, 786px); }
+  html:not(.js) .dot-rosa   { transform: translate(326px, 758px); }
+  html:not(.js) .dot-callie { transform: translate(294px, 792px); }
 
   /* ---------- Column quiet-zone scrim (dims map behind the chat column) ---------- */
   .column-scrim {
@@ -137,29 +252,22 @@
   .btn-app:active { transform: scale(0.96); }
 
   /* ---------- Column ---------- */
-  main { position: relative; z-index: 3; padding: 0 20px; }
+  main { position: relative; z-index: 3; max-width: var(--col); margin: 0 auto; padding: 0 20px; }
 
-  /* full-bleed hero band so the headline can grow to 112px */
   .kicker { text-align: center; width: 100vw; margin-left: calc(50% - 50vw);
             padding: clamp(56px, 6vw, 128px) 12px clamp(10px, 2vw, 44px); }
-
-  /* headline sits directly on the sky — no card or background */
+  /* hero: headline renders directly on the sky — only the word "chaos" gets a chat bubble */
   .hero-pop { position: relative; display: inline-block; font-size: clamp(44px, 5vw, 112px);
               padding: 0.5em min(0.73em, 1.5vw); }
-  .hero-h { position: relative; z-index: 1; font-size: 1em; font-weight: 700;
-            letter-spacing: -0.035em; line-height: 1.12; color: var(--ink); }
-
-  /* subline fades 0→1 over 300ms at t=0, independent of headline sequence */
-  .hero-sub { font-size: clamp(16px, 1.2vw, 21px); color: var(--label); letter-spacing: -0.01em;
-              margin: 0.7em auto 0; max-width: 27em;
+  .hero-h { position: relative; z-index: 1; font-size: 1em; font-weight: 700; letter-spacing: -0.035em; line-height: 1.12; color: var(--ink); }
+  .hero-sub { font-size: clamp(16px, 1.2vw, 21px); color: var(--label); letter-spacing: -0.01em; margin: 0.7em auto 0; max-width: 34em;
               animation: heroSubIn 300ms ease both; }
   @keyframes heroSubIn { from { opacity: 0; } }
 
-  /* line breaking: "your plans" never splits; 3 lines only below 400px */
-  .wb-keep, .nb { white-space: nowrap; }
-  @media (max-width: 399px) { .wb-keep { white-space: normal; } }
-
-  /* "bubble" word-bubble: final size from first paint, never resizes */
+  /* the word "chaos" in an actual chat bubble — FINAL size from first paint, never resizes.
+     Timeline, once per load (base styles = the t=1700ms final state; animations only enter):
+     0–180 bubble spring-in · 180–900 typing · 900–980 dots out · 980–1200 word reveal ·
+     1200–1350 beat · 1350–1700 pin escape. Pure CSS: never replays on scroll/resize/tab return. */
   .word-bubble { position: relative; display: inline-block; padding: 0.06em 0.3em;
                  background: var(--white); color: var(--ink);
                  border-radius: 999px 999px 999px 6px;
@@ -176,6 +284,9 @@
                animation: wbPulse 450ms ease-in-out 180ms 2; }
   .wb-dots i:nth-child(2) { animation-delay: 280ms; }
   .wb-dots i:nth-child(3) { animation-delay: 380ms; }
+  .wb-keep, .nb { white-space: nowrap; }
+  /* three lines only when the "built for kid [chaos]" unit truly cannot fit */
+  @media (max-width: 419px) { .wb-keep { white-space: normal; } }
   @keyframes wbIn { from { transform: scale(.88); } to { transform: scale(1); } }
   @keyframes wbDots { 0% { opacity: 0; } 18% { opacity: 1; } 92% { opacity: 1; } 100% { opacity: 0; } }
   @keyframes wbPulse { 0%, 100% { transform: translateY(0); opacity: .35; }
@@ -184,7 +295,10 @@
                       60% { opacity: 1; transform: scale(1.02); }
                       100% { opacity: 1; transform: scale(1); } }
 
-  /* pin + trail */
+  /* coral pin escape: launches from the bubble's top-right corner at 60% scale, arcs
+     up-and-right ~0.6 bubble heights with one tiny overshoot; 3 trail dashes fade in
+     oldest-first (60ms stagger), the first touching the bubble's edge.
+     Trail wb-t3 endpoint is (34,36) — exactly the pin tip — so no gap. */
   .wb-fx { position: absolute; left: 100%; top: 0; width: 1.5em; height: 1.5em;
            margin-left: -0.171em; margin-top: -1.329em;
            pointer-events: none; z-index: 2; overflow: visible; }
@@ -198,34 +312,33 @@
                      100% { transform: translate(34px, 36px) scale(1); opacity: 1; } }
   @keyframes wbTrail { from { opacity: 0; } to { opacity: 1; } }
 
-  /* ---------- Badge mode (phones ≤ 480px): pin overlaps bubble corner, no trail ----------
-     Tethered mode (> 480px): pin in sky connected by trail — verified safe at 481px+.
-     Pin tip in SVG sits at (34/70 × 1.5em, 36/70 × 1.5em) = (0.729em, 0.771em) within
-     the .wb-fx element. Badge: translate so that point lands on the bubble's top-right
-     corner, then scale 0.85 around that same point. Pin renders ≤ bubble.right + 8px
-     at all phone widths — well clear of even a 320px viewport. */
-  @media (max-width: 480px) {
+  /* ---------- Badge mode (≤560px): pin overlaps bubble corner, no trail ----------
+     At ≤560px the "built for kid [chaos]" line centered in the viewport puts the
+     bubble's right edge close enough to the viewport edge that the tethered pin
+     (which extends 1.329em = ~59px beyond bubble.right) would clip. Badge mode:
+     pin tip (SVG 34,36 in 70×70 vb) anchors to bubble top-right corner at 85% scale.
+     Tethered mode safe from 561px+ (pin stays ≥20px inside viewport). */
+  @media (max-width: 560px) {
     .wb-t1, .wb-t2, .wb-t3 { display: none !important; }
-    .wb-pin { animation: none !important; }   /* SVG attr translate(34,36) takes effect */
+    .wb-pin { animation: none !important; }   /* SVG attr translate(34,36) is the static state */
     .wb-fx {
       left: 100%; top: 0;
-      margin-left: -0.729em;   /* -(34/70 × 1.5em): pin tip x → bubble right edge */
-      margin-top:  -0.771em;   /* -(36/70 × 1.5em): pin tip y → bubble top edge    */
+      margin-left: -0.729em;   /* -(34/70 × 1.5em): pin tip x → bubble right */
+      margin-top:  -0.771em;   /* -(36/70 × 1.5em): pin tip y → bubble top  */
       transform: scale(0.85);
-      transform-origin: 0.729em 0.771em;  /* scale from the pin tip = the corner anchor */
+      transform-origin: 0.729em 0.771em;   /* scale from the pin tip = corner anchor */
     }
   }
 
-  /* reduced motion: render t=1700ms frame statically, no animation at all */
   @media (prefers-reduced-motion: reduce) {
     .word-bubble, .wb-word, .wb-dots, .wb-dots i,
     .wb-pin, .wb-t1, .wb-t2, .wb-t3, .hero-sub { animation: none !important; }
   }
 
-  .thread { display: flex; flex-direction: column; max-width: var(--col); margin: 0 auto; }
+  .thread { display: flex; flex-direction: column; }
 
   .divider { text-align: center; margin: 34px 0 20px; }
-  .divider span { display: inline-block; background: var(--white); color: var(--label);
+  .divider span { display: inline-block; background: var(--white); color: var(--label); white-space: nowrap;
                   font-size: 12px; font-weight: 600; padding: 5px 13px; border-radius: 100px; box-shadow: var(--bubble-shadow); }
 
   .cluster { display: flex; flex-direction: column; gap: 6px; }
@@ -291,13 +404,20 @@
   .typing span:nth-child(3) { animation-delay: .4s; }
   @keyframes blink { 0%,80%,100% { opacity:.4; transform: translateY(0); } 40% { opacity:1; transform: translateY(-2px); } }
 
-  /* ---------- Interstitials ---------- */
+  /* ---------- Interstitials (feature captions) ---------- */
   .interstitial { text-align: center; padding: 60px 12px 56px; }
   .interstitial .pill { display: inline-block; background: var(--white); border-radius: 22px; padding: 20px 28px; box-shadow: var(--bubble-shadow); max-width: 460px; }
   .interstitial h2 { font-size: 26px; font-weight: 700; letter-spacing: -0.035em; line-height: 1.2; color: var(--ink); }
   .interstitial p { font-size: 15.5px; color: var(--label); margin-top: 7px; letter-spacing: -0.01em; }
 
-  /* ---------- Close: quick-reply chips ---------- */
+  /* ---------- Privacy block ---------- */
+  .privacy { display: flex; justify-content: center; padding: 8px 12px 12px; }
+  .privacy .card-p { background: var(--white); border-radius: 22px; padding: 22px 26px; box-shadow: var(--bubble-shadow); max-width: 460px; }
+  .privacy h3 { font-size: 18px; font-weight: 800; letter-spacing: -0.02em; color: var(--ink); margin-bottom: 8px; }
+  .privacy p { font-size: 14.5px; line-height: 1.55; color: var(--ink); letter-spacing: -0.01em; }
+  .privacy p + p { margin-top: 8px; }
+
+  /* ---------- Close: visitor quick-reply chips ---------- */
   .chips { display: flex; gap: 10px; margin: 14px 0 0 46px; flex-wrap: wrap; }
   .chip { display: inline-flex; align-items: center; padding: 11px 20px; border-radius: 100px; cursor: pointer;
           font-size: 14.5px; font-weight: 700; letter-spacing: -0.01em;
@@ -305,15 +425,6 @@
           box-shadow: var(--bubble-shadow); transition: transform .15s ease; }
   .chip.solid { background: var(--coral); color: #fff; border-color: var(--coral); box-shadow: var(--coral-glow); }
   .chip:active { transform: scale(0.96); }
-
-  /* ---------- Sticky input (stands on grass) ---------- */
-  .inputbar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 45; }
-  .inputbar-inner { max-width: var(--col); margin: 0 auto; padding: 0 20px calc(var(--grass-h) - 30px); display: flex; align-items: center; gap: 10px; }
-  .inputbar .field { flex: 1; height: 48px; border-radius: 100px; background: #fff; display: flex; align-items: center; padding: 0 6px 0 18px; gap: 8px; box-shadow: 0 6px 18px rgba(43,74,92,0.18); }
-  .inputbar .field .ph { flex: 1; color: var(--label); font-size: 15.5px; letter-spacing: -0.01em; }
-  .inputbar .field .mascot { width: 22px; height: auto; }
-  .send { width: 40px; height: 40px; border-radius: 50%; flex: none; border: none; cursor: pointer; background: var(--coral); display: grid; place-items: center; box-shadow: var(--coral-glow); transition: transform .15s ease; }
-  .send:active { transform: scale(0.9); }
 
   /* ---------- Footer ---------- */
   footer { position: relative; z-index: 3; margin-top: 40px; }
@@ -328,7 +439,8 @@
   @media (prefers-reduced-motion: reduce) {
     .js .reveal { opacity: 1 !important; transform: none !important; transition: none; }
     .map-cam { transition: none !important; }
-    .cloud, #route, .geo { animation: none !important; }
+    .cloud, #route1, #route2, .geo { animation: none !important; }
+    .dot, #pin-school, #pin-party, #world, .dot .ring, #geofence, #geo-static { transition: none !important; }
     html { scroll-behavior: auto; }
   }
   @media (max-width: 640px) {
@@ -339,78 +451,134 @@
 </head>
 <body>
 
-  <!-- ===================== MAP LAYER (chalk lines on sky) ===================== -->
+  <!-- ===================== MAP LAYER (chalk lines on sky — Fenn's live map of the village) ===================== -->
   <div class="map-layer" aria-hidden="true">
     <div class="map-cam" id="cam" data-beat="1">
       <svg viewBox="0 0 1600 1100" preserveAspectRatio="xMidYMid slice">
         <!-- clouds -->
         <g fill="#FFFFFF">
-          <ellipse class="cloud" cx="360" cy="150" rx="150" ry="46" opacity="0.32"/>
-          <ellipse class="cloud b" cx="1180" cy="230" rx="180" ry="52" opacity="0.26"/>
-          <ellipse class="cloud" cx="820" cy="90" rx="120" ry="38" opacity="0.22"/>
+          <ellipse class="cloud" cx="720" cy="64" rx="140" ry="40" opacity="0.22"/>
+          <ellipse class="cloud b" cx="1080" cy="320" rx="170" ry="50" opacity="0.18"/>
         </g>
 
-        <!-- roads -->
-        <g fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round">
-          <path d="M470 940 C740 640 980 470 1200 300" stroke-opacity="0.5"/>
-          <path d="M110 360 C420 338 900 350 1220 326" stroke-opacity="0.42"/>
-          <path d="M300 110 C282 400 300 700 322 1050" stroke-opacity="0.4"/>
-          <path d="M1150 190 C1140 460 1180 730 1116 1020" stroke-opacity="0.4"/>
-          <path d="M140 640 C440 616 820 660 1120 676" stroke-opacity="0.36"/>
-        </g>
-
-        <!-- parks -->
-        <g fill="none" stroke="#FFFFFF" stroke-opacity="0.52" stroke-width="2.5" stroke-dasharray="7 9">
-          <rect x="96" y="452" width="664" height="86" rx="43"/>
-          <ellipse cx="1108" cy="228" rx="156" ry="96"/>
-          <ellipse cx="1214" cy="742" rx="72" ry="46"/>
-        </g>
-        <!-- coastline -->
-        <g fill="none" stroke="#FFFFFF" stroke-opacity="0.42" stroke-width="2.5" stroke-dasharray="4 10">
-          <path d="M126 -20 C150 210 128 470 150 720 C162 902 130 1004 152 1120"/>
-          <path d="M1198 -20 C1176 150 1214 260 1180 400 C1150 560 1226 700 1206 860 C1196 962 1216 1030 1198 1120"/>
-        </g>
-
-        <!-- labels -->
-        <g font-family="-apple-system, Inter, sans-serif" fill="#3D7391" font-weight="700" letter-spacing="0.12em">
-          <text x="150" y="300" font-size="17">RICHMOND</text>
-          <text x="120" y="506" font-size="15">GOLDEN GATE PARK</text>
-          <text x="188" y="780" font-size="18">SUNSET</text>
-          <text x="96" y="980" font-size="15">OCEAN BEACH</text>
-          <text x="382" y="682" font-size="15">TWIN PEAKS</text>
-          <text x="1052" y="250" font-size="16">PRESIDIO</text>
-          <text x="1176" y="230" font-size="15">MARINA</text>
-          <text x="1150" y="470" font-size="16">DOWNTOWN</text>
-          <text x="1150" y="690" font-size="15">THE MISSION</text>
-          <text x="1236" y="900" font-size="18" opacity="0.85" transform="rotate(12 1236 900)">SAN FRANCISCO BAY</text>
-        </g>
-
-        <!-- winner coral pin -->
-        <g id="pin-winner" transform="translate(372,300)">
-          <path d="M0 -30 C16 -30 28 -18 28 -2 C28 18 0 40 0 40 C0 40 -28 18 -28 -2 C-28 -18 -16 -30 0 -30 Z" fill="#E2604A"/>
-          <circle cy="-2" r="9" fill="#fff"/>
-        </g>
-
-        <!-- beat-3 fx -->
-        <g id="fx">
-          <g>
-            <circle class="geo g1" cx="700" cy="560" r="58" fill="none" stroke="#E2604A" stroke-width="3" stroke-opacity="0.65"/>
-            <circle class="geo g2" cx="700" cy="560" r="58" fill="none" stroke="#E2604A" stroke-width="3" stroke-opacity="0.5"/>
-            <circle class="geo g3" cx="700" cy="560" r="58" fill="none" stroke="#E2604A" stroke-width="3" stroke-opacity="0.4"/>
+        <g id="world">
+          <!-- ===== the school (upper-left margin) ===== -->
+          <g id="school">
+            <ellipse cx="336" cy="558" rx="74" ry="42" fill="none" stroke="#FFFFFF" stroke-opacity="0.55" stroke-width="2.5" stroke-dasharray="7 9"/>
+            <text x="230" y="482" font-family="-apple-system, Inter, sans-serif" fill="#3D7391" font-weight="700" letter-spacing="0.12em" font-size="14">OAK STREET SCHOOL</text>
           </g>
-          <path id="route" fill="none" stroke="#E2604A" stroke-width="6" stroke-linecap="round" stroke-dasharray="2 14"
-                d="M470 470 C560 496 632 540 700 560 C806 592 902 648 1010 694"/>
-          <g transform="translate(700,560)">
-            <path d="M0 -28 C15 -28 26 -17 26 -2 C26 17 0 37 0 37 C0 37 -26 17 -26 -2 C-26 -17 -15 -28 0 -28 Z" fill="#E2604A"/>
-            <circle cy="-2" r="8.5" fill="#fff"/>
+
+          <!-- coral routes (Fenn's actions): Callie -> school (Thu pickup); Rosa -> school (handoff) -->
+          <path id="route1" d="M300 1000 C 312 900 322 760 326 660 C 330 620 334 590 336 572" fill="none" stroke="#E2604A" stroke-width="5" stroke-linecap="round" stroke-dasharray="2 13"/>
+          <path id="route2" d="M1150 640 C 950 620 640 596 420 572" fill="none" stroke="#E2604A" stroke-width="4" stroke-linecap="round" stroke-dasharray="2 13" stroke-opacity="0.8"/>
+
+          <!-- school geofence (appears when Fenn pings the ETA) -->
+          <g id="geofence">
+            <circle class="geo g1" cx="336" cy="558" r="46" fill="none" stroke="#E2604A" stroke-width="3" stroke-opacity="0.6"/>
+            <circle class="geo g2" cx="336" cy="558" r="46" fill="none" stroke="#E2604A" stroke-width="3" stroke-opacity="0.45"/>
+            <circle id="geo-static" cx="336" cy="558" r="46" fill="none" stroke="#E2604A" stroke-width="2.5"/>
           </g>
-          <g>
-            <circle r="9.5" fill="#fff" stroke="#E2604A" stroke-width="4">
-              <animateMotion dur="5.5s" repeatCount="indefinite" rotate="0"><mpath href="#route"/></animateMotion>
-            </circle>
-            <circle r="8.5" fill="#fff" stroke="#7FB2C9" stroke-width="4">
-              <animateMotion dur="5.5s" begin="-2.6s" repeatCount="indefinite" rotate="0"><mpath href="#route"/></animateMotion>
-            </circle>
+
+          <!-- school pin (drops when Fenn resolves practice) -->
+          <g id="pin-school">
+            <path d="M0 -30 C16 -30 28 -18 28 -2 C28 18 0 40 0 40 C0 40 -28 18 -28 -2 C-28 -18 -16 -30 0 -30 Z" fill="#E2604A"/>
+            <circle cy="-2" r="9" fill="#fff"/>
+          </g>
+
+          <!-- party pin (drops on Golden Gate Park for Leo's 7th) -->
+          <g id="pin-party">
+            <path d="M0 -26 C14 -26 24 -16 24 -2 C24 15 0 34 0 34 C0 34 -24 15 -24 -2 C-24 -16 -14 -26 0 -26 Z" fill="#E2604A"/>
+            <circle cy="-2" r="8" fill="#fff"/>
+          </g>
+
+          <!-- ===== SAN FRANCISCO (chalk city) ===== -->
+          <g id="sf" transform="translate(0,290)">
+            <!-- roads (single-weight white lines — never full opacity; bubbles stay brightest) -->
+            <g fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round">
+              <path d="M470 940 C740 640 980 470 1200 300" stroke-opacity="0.5"/>
+              <path d="M110 360 C420 338 900 350 1220 326" stroke-opacity="0.42"/>
+              <path d="M300 110 C282 400 300 700 322 1050" stroke-opacity="0.4"/>
+              <path d="M1150 190 C1140 460 1180 730 1116 1020" stroke-opacity="0.4"/>
+              <path d="M140 640 C440 616 820 660 1120 676" stroke-opacity="0.36"/>
+            </g>
+            <!-- parks (white dashed outlines, NO fill) -->
+            <g fill="none" stroke="#FFFFFF" stroke-opacity="0.52" stroke-width="2.5" stroke-dasharray="7 9">
+              <rect x="96" y="452" width="664" height="86" rx="43"/>
+              <ellipse cx="1108" cy="228" rx="156" ry="96"/>
+              <ellipse cx="1214" cy="742" rx="72" ry="46"/>
+            </g>
+            <!-- coastline -->
+            <g fill="none" stroke="#FFFFFF" stroke-opacity="0.42" stroke-width="2.5" stroke-dasharray="4 10">
+              <path d="M126 -20 C150 210 128 470 150 720 C162 902 130 1004 152 1120"/>
+              <path d="M1198 -20 C1176 150 1214 260 1180 400 C1150 560 1226 700 1206 860 C1196 962 1216 1030 1198 1120"/>
+            </g>
+            <!-- labels — margins only, out of the central column band -->
+            <g font-family="-apple-system, Inter, sans-serif" fill="#3D7391" font-weight="700" letter-spacing="0.12em">
+              <text x="150" y="300" font-size="17">RICHMOND</text>
+              <text x="120" y="506" font-size="15">GOLDEN GATE PARK</text>
+              <text x="188" y="780" font-size="18">SUNSET</text>
+              <text x="382" y="682" font-size="15">TWIN PEAKS</text>
+              <text x="1052" y="250" font-size="16">PRESIDIO</text>
+              <text x="1150" y="470" font-size="16">DOWNTOWN</text>
+              <text x="1150" y="690" font-size="15">THE MISSION</text>
+              <text x="1236" y="795" font-size="18" opacity="0.85" transform="rotate(12 1236 795)">SAN FRANCISCO BAY</text>
+            </g>
+          </g>
+
+          <!-- ===== member dots (Fenn's live map: where the village is) ===== -->
+          <g class="dot dot-you">
+            <circle class="ring" r="15" fill="#FFFFFF" stroke-width="2.5"/>
+            <text x="0" y="3.5" text-anchor="middle" font-size="9" font-weight="800" fill="#3D7391" font-family="-apple-system, Inter, sans-serif">YOU</text>
+            <g class="badge">
+              <circle cx="13" cy="-13" r="9" fill="#FFFFFF"/>
+              <text class="be be-home" x="13" y="-9" font-size="11" text-anchor="middle">🏠</text>
+            </g>
+          </g>
+          <g class="dot dot-dave">
+            <circle class="ring" r="15" fill="#FFFFFF" stroke-width="2.5"/>
+            <image href="/assets/avatars-web/face-dave.png" x="-11" y="-11" width="22" height="22"/>
+            <g class="badge">
+              <circle cx="13" cy="-13" r="9" fill="#FFFFFF"/>
+              <text class="be be-home" x="13" y="-9" font-size="11" text-anchor="middle">🏠</text>
+              <text class="be be-work" x="13" y="-9" font-size="11" text-anchor="middle">🏢</text>
+            </g>
+          </g>
+          <g class="dot dot-priya">
+            <circle class="ring" r="15" fill="#FFFFFF" stroke-width="2.5"/>
+            <image href="/assets/avatars-web/face-priya.png" x="-11" y="-11" width="22" height="22"/>
+            <g class="badge">
+              <circle cx="13" cy="-13" r="9" fill="#FFFFFF"/>
+              <text class="be be-home" x="13" y="-9" font-size="11" text-anchor="middle">🏠</text>
+              <text class="be be-shop" x="13" y="-9" font-size="11" text-anchor="middle">🛍</text>
+            </g>
+          </g>
+          <g class="dot dot-marcus">
+            <circle class="ring" r="15" fill="#FFFFFF" stroke-width="2.5"/>
+            <image href="/assets/avatars-web/face-marcus.png" x="-11" y="-11" width="22" height="22"/>
+            <g class="badge">
+              <circle cx="13" cy="-13" r="9" fill="#FFFFFF"/>
+              <text class="be be-home" x="13" y="-9" font-size="11" text-anchor="middle">🏠</text>
+              <text class="be be-car" x="13" y="-9" font-size="11" text-anchor="middle">🚗</text>
+            </g>
+          </g>
+          <g class="dot dot-rosa">
+            <circle class="ring" r="15" fill="#FFFFFF" stroke-width="2.5"/>
+            <image href="/assets/avatars-web/face-rosa.png" x="-11" y="-11" width="22" height="22"/>
+            <g class="badge">
+              <circle cx="13" cy="-13" r="9" fill="#FFFFFF"/>
+              <text class="be be-home" x="13" y="-9" font-size="11" text-anchor="middle">🏠</text>
+              <text class="be be-cook" x="13" y="-9" font-size="11" text-anchor="middle">🍲</text>
+              <text class="be be-car" x="13" y="-9" font-size="11" text-anchor="middle">🚗</text>
+            </g>
+          </g>
+          <g class="dot dot-callie">
+            <circle class="ring" r="15" fill="#FFFFFF" stroke-width="2.5"/>
+            <image href="/assets/avatars-web/face-callie.png" x="-11" y="-11" width="22" height="22"/>
+            <g class="badge">
+              <circle cx="13" cy="-13" r="9" fill="#FFFFFF"/>
+              <text class="be be-home" x="13" y="-9" font-size="11" text-anchor="middle">🏠</text>
+              <text class="be be-car" x="13" y="-9" font-size="11" text-anchor="middle">🚗</text>
+            </g>
           </g>
         </g>
       </svg>
@@ -434,127 +602,164 @@
   <main id="top">
     <div class="kicker" data-cam="wide" data-beat="1">
       <div class="hero-pop">
-        <h1 class="hero-h"><span class="nb">Bust your plans</span><br><span class="wb-keep">out of the <span class="word-bubble"><span class="wb-word">bubble</span><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><svg class="wb-fx" aria-hidden="true" viewBox="0 0 70 70" fill="none"><g stroke="#E2604A" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"><path class="wb-t1" d="M10 59.5 L14.5 54.5"></path><path class="wb-t2" d="M17 51 L21.5 46"></path><path class="wb-t3" d="M26.5 41 L34 36"></path></g><g class="wb-pin" transform="translate(34,36)"><path d="M0 0 C -7.5 -7.5 -10.5 -12 -10.5 -16.5 C -10.5 -23 -5.8 -27.5 0 -27.5 C 5.8 -27.5 10.5 -23 10.5 -16.5 C 10.5 -12 7.5 -7.5 0 0 Z" fill="#E2604A"></path><circle cy="-17" r="3.6" fill="#FFFFFF"></circle></g></svg></span></span></h1>
+        <h1 class="hero-h"><span class="nb">The messenger</span> <span class="wb-keep">built for kid <span class="word-bubble"><span class="wb-word">chaos</span><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><svg class="wb-fx" aria-hidden="true" viewBox="0 0 70 70" fill="none"><g stroke="#E2604A" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"><path class="wb-t1" d="M10 59.5 L14.5 54.5"></path><path class="wb-t2" d="M17 51 L21.5 46"></path><path class="wb-t3" d="M26.5 41 L34 36"></path></g><g class="wb-pin" transform="translate(34,36)"><path d="M0 0 C -7.5 -7.5 -10.5 -12 -10.5 -16.5 C -10.5 -23 -5.8 -27.5 0 -27.5 C 5.8 -27.5 10.5 -23 10.5 -16.5 C 10.5 -12 7.5 -7.5 0 0 Z" fill="#E2604A"></path><circle cy="-17" r="3.6" fill="#FFFFFF"></circle></g></svg></span></span></h1>
       </div>
-      <p class="hero-sub">Fenn lives in your group chat — it remembers, reminds, and knows where things happen.</p>
+      <p class="hero-sub">Fenn is the group chat for your village — with a helper inside who tracks the plans, the reminders, and whose turn it is. So you don't have to.</p>
     </div>
 
     <div class="thread">
 
-      <!-- BEAT 1 -->
-      <div class="divider reveal"><span>Camp crew · Tuesday 6:12 pm</span></div>
+      <!-- ============ HERO DEMO — "The Week" (Oak Street Crew) ============ -->
+
+      <!-- Beat 1 — chaos arrives -->
+      <div class="divider reveal"><span>Oak Street Crew 🚗⚽ · Tuesday 4:12 pm</span></div>
 
       <div class="cluster">
-        <div class="name reveal">Dana</div>
-        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-dana.png" alt="Dana"></span><span class="bubble">ok june. samuel p taylor or china camp</span></div>
-        <div class="name reveal">Bob</div>
-        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-bob.png" alt="Bob"></span><span class="bubble">either</span></div>
-        <div class="name reveal">Alex</div>
-        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-alex.png" alt="Alex"></span><span class="bubble">china camp. no wait</span></div>
-        <div class="msg you first reveal"><span class="bubble">this is why we never go anywhere</span></div>
+        <div class="name reveal">Priya</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-priya.png" alt="Priya"></span><span class="bubble">anyone know if practice is still 4:30 thursday?? 😩</span></div>
+        <div class="name reveal">Marcus</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-marcus.png" alt="Marcus"></span><span class="bubble">I thought it moved to 5</span></div>
+        <div class="name reveal">Dave</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-dave.png" alt="Dave"></span><span class="bubble">wait is this soccer or swim</span></div>
+
+        <!-- Beat 2 — Fenn resolves it (unprompted; calm enters) -->
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing data-beat="resolve">
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Practice is Thursday at 5:00 PM — Coach's update from Monday. It's Marcus's week to drive.</span>
+        </div>
+      </div>
+
+      <div class="interstitial reveal"><div class="pill"><h2>Everyone knows whose week it is</h2><p>Turns, times, and who's driving — tracked.</p></div></div>
+
+      <!-- Beat 3 — the reminder (Fenn nags so Jess never has to) -->
+      <div class="cluster">
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing data-beat="remind">
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Reminder for Thursday: permission slips for the field trip are due. Jess, Priya — still need yours.</span>
+        </div>
+      </div>
+
+      <div class="interstitial reveal"><div class="pill"><h2>The permission slip gets remembered</h2><p>Fenn does the reminding, so nobody has to be the bad guy.</p></div></div>
+
+      <!-- Beat 4 — a decision resolves (poll) -->
+      <div class="cluster">
+        <div class="name reveal">Grandma Rosa</div>
+        <div class="msg recv first reveal" data-beat="party"><span class="avatar photo"><img src="/assets/avatars-web/emoji-rosa.png" alt="Grandma Rosa"></span><span class="bubble">Can we do Leo's birthday dinner this weekend? I can cook 💛</span></div>
 
         <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
         <div class="msg fenn first reveal" data-typing>
           <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
-          <span class="bubble">Settling it:</span>
+          <span class="bubble">Quick poll — Saturday or Sunday for Leo's birthday dinner?</span>
         </div>
         <div class="msg fenn cont reveal">
           <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
           <span class="card">
             <span class="card-title">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M4 6h16M4 12h10M4 18h13" stroke="#E2604A" stroke-width="2.4" stroke-linecap="round"/></svg>
-              Where to?
+              Leo's birthday dinner
             </span>
             <span class="poll">
-              <span class="poll-opt win"><span class="poll-fill" style="width:75%"></span><span class="poll-content"><span class="poll-label">Samuel P. Taylor</span><span class="poll-count">3</span></span></span>
-              <span class="poll-opt"><span class="poll-fill" style="width:25%"></span><span class="poll-content"><span class="poll-label">China Camp</span><span class="poll-count">1</span></span></span>
+              <span class="poll-opt win"><span class="poll-fill" style="width:80%"></span><span class="poll-content"><span class="poll-label">Saturday</span><span class="poll-count">4</span></span></span>
+              <span class="poll-opt"><span class="poll-fill" style="width:20%"></span><span class="poll-content"><span class="poll-label">Sunday</span><span class="poll-count">1</span></span></span>
             </span>
           </span>
         </div>
-
-        <div class="msg fenn cont reveal" data-typing data-cam="winner">
-          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
-          <span class="bubble">Samuel P. Taylor it is. Reservations open Friday 8am.</span>
-        </div>
-      </div>
-
-      <div class="interstitial reveal"><div class="pill"><h2>Fenn gets the group to a decision</h2><p>From "either works" to booked.</p></div></div>
-
-      <!-- BEAT 2 -->
-      <div class="divider reveal" data-cam="campsite" data-beat="campsite"><span>2 days later</span></div>
-
-      <div class="cluster">
-        <div class="name reveal">Dana</div>
-        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-dana.png" alt="Dana"></span><span class="bubble">what did we forget last year</span></div>
-
-        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
-        <div class="msg fenn first reveal" data-typing>
-          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
-          <span class="bubble">Firewood, Advil, and Bob's sleeping bag. Bob has confirmed the bag has been in his trunk since August.</span>
-        </div>
-
-        <div class="name reveal">Bob</div>
-        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-bob.png" alt="Bob"></span><span class="bubble">it has</span></div>
-      </div>
-
-      <div class="interstitial reveal"><div class="pill"><h2>It remembers last time</h2><p>So you don't repeat it.</p></div></div>
-
-      <!-- BEAT 3 -->
-      <div class="cluster" data-cam="route" data-beat="3">
-        <div class="msg you first reveal"><span class="bubble">someone grab firewood on the way</span></div>
-        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
-        <div class="msg fenn first reveal" data-typing>
-          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
-          <span class="bubble">I'll ping whoever passes Fairfax Hardware first.</span>
-        </div>
-      </div>
-
-      <div class="divider reveal"><span>Saturday 9:41 am</span></div>
-
-      <div class="cluster">
-        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
-        <div class="msg fenn first reveal" data-typing>
-          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
-          <span class="bubble">Alex — you're 2 minutes from Fairfax Hardware. Firewood.</span>
-        </div>
-        <div class="name reveal">Alex</div>
-        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-alex.png" alt="Alex"></span><span class="bubble">on it</span></div>
-      </div>
-
-      <div class="interstitial reveal"><div class="pill"><h2>It knows where things happen</h2><p>Conversation plus location, put to work.</p></div></div>
-
-      <!-- BEAT 4 -->
-      <div class="cluster" data-cam="out" data-beat="out">
-        <div class="name reveal">Dana</div>
-        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-dana.png" alt="Dana"></span><span class="bubble">also someone needs to book the group site friday 8am sharp and confirm it fits 12</span></div>
-
-        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
-        <div class="msg fenn first reveal" data-typing>
-          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
-          <span class="bubble">Here's what I've saved:</span>
-        </div>
-        <div class="msg fenn cont reveal">
-          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
-          <span class="card">
-            <span class="card-title">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4 10-10" stroke="#E2604A" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-              Added to the list
-            </span>
-            <span class="task-row"><span class="cal-ico"><span class="m">Fri</span><span class="d">8</span></span><span><span class="task-t">Book group site</span><span class="task-s">Fri 8:00 am · reminder set</span></span></span>
-            <span class="task-row"><span class="task-check"></span><span><span class="task-t">Confirm site fits 12</span><span class="task-s">Dana</span></span></span>
-          </span>
-        </div>
-
         <div class="msg fenn cont reveal" data-typing>
           <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
-          <span class="bubble">Saved where it won't get buried at message 214.</span>
+          <span class="bubble">Saturday it is. Added to the group calendar.</span>
         </div>
       </div>
 
-      <div class="interstitial reveal"><div class="pill"><h2>The important bits, pulled out of the scroll</h2><p>Todos, dates, and details — kept, not lost.</p></div></div>
+      <!-- Beat 5 — status badge moment (location, benign framing) -->
+      <div class="divider reveal" data-cam="school" data-beat="thu"><span>Thursday 2:58 pm</span></div>
 
-      <!-- CLOSE -->
-      <div class="cluster" style="margin-top:26px;">
+      <div class="cluster">
+        <div class="name reveal">Callie</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-callie.png" alt="Callie"></span><span class="bubble">Heading to pickup now!</span></div>
+
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing data-beat="eta">
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Callie's on the way to school. ETA 3:10 PM.</span>
+        </div>
+      </div>
+
+      <div class="interstitial reveal"><div class="pill"><h2>See "on the way" without asking</h2><p>A status badge, not a tracking app.</p></div></div>
+
+      <!-- Beat 6 — the exhale -->
+      <div class="cluster">
+        <div class="msg you first reveal" data-beat="exhale"><span class="bubble">honestly what did we do before this 😅</span></div>
+        <div class="name reveal">Dave</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-dave.png" alt="Dave"></span><span class="bubble">you did everything before this</span></div>
+      </div>
+
+      <!-- Privacy block -->
+      <!-- NOTE: language pending legal/actual policy review — confirm each claim against the
+           real ToS/privacy policy before shipping. Do not publish a claim the product doesn't honor. -->
+      <div class="privacy reveal">
+        <div class="card-p">
+          <h3>What Fenn sees — and what it doesn't.</h3>
+          <p>Fenn reads only the chats it's in, to help with plans in those chats. Your messages aren't used to train AI models or sold to anyone.</p>
+          <p>You control your location: choose who can see it and when you share it. Most of the time it's just a status badge — "on the way" — and when you need the map (school pickup, meeting up at the park), it's there.</p>
+        </div>
+      </div>
+
+      <!-- ============ VIGNETTE — "The Birthday Party" ============ -->
+      <div class="divider reveal" data-cam="wide" data-beat="rsvp"><span>Leo's 7th 🎂 · two weeks out</span></div>
+
+      <div class="cluster">
+        <div class="msg you first reveal" data-beat="ggp"><span class="bubble">Ok! Leo's party, Sat the 19th, 2pm at Golden Gate Park 🥳</span></div>
+
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">RSVPs so far: 6 yes, 2 no reply. I'll check in with Sam and Dana tomorrow.</span>
+        </div>
+      </div>
+
+      <div class="divider reveal"><span>next day</span></div>
+
+      <div class="cluster">
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Everyone's in — 8 kids total. Dana asked about allergies: Leo's cake will be nut-free.</span>
+        </div>
+        <div class="name reveal">Priya</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-priya.png" alt="Priya"></span><span class="bubble">you are SO hired 😂</span></div>
+      </div>
+
+      <div class="interstitial reveal"><div class="pill"><h2>Never chase an RSVP again</h2><p>Fenn follows up so the host doesn't.</p></div></div>
+
+      <!-- ============ VIGNETTE — "The Handoff" ============ -->
+      <div class="divider reveal" data-beat="handoff"><span>Home base 🏠 · Wednesday 4:47 pm</span></div>
+
+      <div class="cluster">
+        <div class="name reveal">Dave</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-dave.png" alt="Dave"></span><span class="bubble">Running late, can someone grab the kids?</span></div>
+
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Grandma Rosa is closest and free — Rosa, can you get pickup today?</span>
+        </div>
+
+        <div class="name reveal">Grandma Rosa</div>
+        <div class="msg recv first reveal"><span class="avatar photo"><img src="/assets/avatars-web/emoji-rosa.png" alt="Grandma Rosa"></span><span class="bubble">On it! ❤️</span></div>
+
+        <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
+        <div class="msg fenn first reveal" data-typing>
+          <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
+          <span class="bubble">Rosa's got pickup. Callie, dinner's in the fridge — Jess left instructions this morning.</span>
+        </div>
+      </div>
+
+      <div class="interstitial reveal"><div class="pill"><h2>Everyone knows the plan</h2><p>The village absorbs the curveball — in under a minute.</p></div></div>
+
+      <!-- ============ CLOSE — Fenn breaks the fourth wall ============ -->
+      <div class="cluster" style="margin-top:26px;" data-beat="close">
         <div class="name fenn-name reveal" style="margin-left:46px;">Fenn</div>
         <div class="msg fenn first reveal" data-typing>
           <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
@@ -562,11 +767,11 @@
         </div>
         <div class="msg fenn cont reveal" data-typing>
           <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
-          <span class="bubble">Except you don't need another one — you need one that works for you. Bring one group and see.</span>
+          <span class="bubble">The difference: I remember the permission slips, chase RSVPs, and make it easy to track pick-ups or know when to start dinner.</span>
         </div>
         <div class="msg fenn cont reveal" data-typing>
           <span class="avatar"><img src="/assets/fenn-logo.png" alt="Fenn"></span>
-          <span class="bubble">Want me in your chats?</span>
+          <span class="bubble">Bring a partner or close friend along and see.</span>
         </div>
         <div class="chips reveal">
           <a class="chip solid" href="https://apps.apple.com/us/app/fenn/id6761315757">Yes, let's go</a>
@@ -597,27 +802,21 @@
   </div>
 
   <script>
-    function goApp() {
-      window.location.href = 'https://apps.apple.com/us/app/fenn/id6761315757';
-    }
-
     document.documentElement.classList.add('js');
 
     (function () {
       var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       var cam = document.getElementById('cam');
       var CAM = {
-        wide:     'scale(1) translate(0px, 0px)',
-        winner:   'scale(1.42) translate(7%, 9%)',
-        campsite: 'scale(1.7) translate(9%, 9%)',
-        route:    'scale(1.5) translate(-3%, 3%)',
-        out:      'scale(1.06) translate(0px, 0px)'
+        wide:   'scale(1) translate(0px, 0px)',
+        school: 'scale(1.4) translate(5%, -1%)'
       };
 
       var reveals = [].slice.call(document.querySelectorAll('.reveal'));
       if (reduce || !('IntersectionObserver' in window)) {
         reveals.forEach(function (el) { el.classList.add('in'); });
       } else {
+        var vh = window.innerHeight;
         var io = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
             if (!entry.isIntersecting) return;
@@ -632,7 +831,11 @@
             setTimeout(function () { typing ? revealTyping(el) : el.classList.add('in'); }, delay);
           });
         }, { threshold: 0.15, rootMargin: '0px 0px -8% 0px' });
-        reveals.forEach(function (el) { io.observe(el); });
+        reveals.forEach(function (el) {
+          /* anything already in the viewport on load renders instantly — no entrance animation */
+          if (el.getBoundingClientRect().top < vh) { el.classList.add('in'); return; }
+          io.observe(el);
+        });
       }
 
       function revealTyping(msg) {
@@ -643,8 +846,9 @@
         setTimeout(function () { t.remove(); bubble.style.display=''; }, 760);
       }
 
-      if (!reduce && 'IntersectionObserver' in window) {
-        var anchors = [].slice.call(document.querySelectorAll('[data-cam]'));
+      /* beat anchors: state changes fire between clusters */
+      if ('IntersectionObserver' in window) {
+        var anchors = [].slice.call(document.querySelectorAll('[data-beat]'));
         var camIO = new IntersectionObserver(function (entries) {
           entries.forEach(function (entry) {
             if (!entry.isIntersecting) return;
