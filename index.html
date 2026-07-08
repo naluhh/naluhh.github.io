@@ -256,6 +256,7 @@
 
   .kicker { text-align: center; width: 100vw; margin-left: calc(50% - 50vw);
             padding: clamp(56px, 6vw, 128px) 12px clamp(10px, 2vw, 44px); }
+  .kicker-inner { max-width: 680px; margin: 0 auto; }
   /* hero: headline renders directly on the sky — only the word "chaos" gets a chat bubble */
   .hero-pop { position: relative; display: inline-block; font-size: clamp(44px, 5vw, 112px);
               padding: 0.5em min(0.73em, 1.5vw); }
@@ -513,15 +514,15 @@
               <path d="M1198 -20 C1176 150 1214 260 1180 400 C1150 560 1226 700 1206 860 C1196 962 1216 1030 1198 1120"/>
             </g>
             <!-- labels — margins only, out of the central column band -->
-            <g font-family="-apple-system, Inter, sans-serif" fill="#3D7391" font-weight="700" letter-spacing="0.12em">
+            <g font-family="-apple-system, Inter, sans-serif" fill="#3D7391" font-weight="700" letter-spacing="0.12em" opacity="0.4">
               <text x="150" y="300" font-size="17">RICHMOND</text>
               <text x="120" y="506" font-size="15">GOLDEN GATE PARK</text>
               <text x="188" y="780" font-size="18">SUNSET</text>
               <text x="382" y="682" font-size="15">TWIN PEAKS</text>
-              <text x="1052" y="250" font-size="16">PRESIDIO</text>
+              <text x="1220" y="220" font-size="16">PRESIDIO</text>
               <text x="1150" y="470" font-size="16">DOWNTOWN</text>
               <text x="1150" y="690" font-size="15">THE MISSION</text>
-              <text x="1236" y="795" font-size="18" opacity="0.85" transform="rotate(12 1236 795)">SAN FRANCISCO BAY</text>
+              <text x="1236" y="795" font-size="18" transform="rotate(12 1236 795)">SAN FRANCISCO BAY</text>
             </g>
           </g>
 
@@ -601,10 +602,12 @@
   <!-- ===================== THREAD ===================== -->
   <main id="top">
     <div class="kicker" data-cam="wide" data-beat="1">
-      <div class="hero-pop">
-        <h1 class="hero-h"><span class="nb">The messenger</span> <span class="wb-keep">built for kid <span class="word-bubble"><span class="wb-word">chaos</span><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><svg class="wb-fx" aria-hidden="true" viewBox="0 0 70 70" fill="none"><g stroke="#E2604A" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"><path class="wb-t1" d="M10 59.5 L14.5 54.5"></path><path class="wb-t2" d="M17 51 L21.5 46"></path><path class="wb-t3" d="M26.5 41 L34 36"></path></g><g class="wb-pin" transform="translate(34,36)"><path d="M0 0 C -7.5 -7.5 -10.5 -12 -10.5 -16.5 C -10.5 -23 -5.8 -27.5 0 -27.5 C 5.8 -27.5 10.5 -23 10.5 -16.5 C 10.5 -12 7.5 -7.5 0 0 Z" fill="#E2604A"></path><circle cy="-17" r="3.6" fill="#FFFFFF"></circle></g></svg></span></span></h1>
+      <div class="kicker-inner">
+        <div class="hero-pop">
+          <h1 class="hero-h"><span class="nb">The messenger</span> <span class="wb-keep">built for kid <span class="word-bubble"><span class="wb-word">chaos</span><span class="wb-dots" aria-hidden="true"><i></i><i></i><i></i></span><svg class="wb-fx" aria-hidden="true" viewBox="0 0 70 70" fill="none"><g stroke="#E2604A" stroke-width="3" stroke-linecap="round" stroke-opacity="0.85"><path class="wb-t1" d="M10 59.5 L14.5 54.5"></path><path class="wb-t2" d="M17 51 L21.5 46"></path><path class="wb-t3" d="M26.5 41 L34 36"></path></g><g class="wb-pin" transform="translate(34,36)"><path d="M0 0 C -7.5 -7.5 -10.5 -12 -10.5 -16.5 C -10.5 -23 -5.8 -27.5 0 -27.5 C 5.8 -27.5 10.5 -23 10.5 -16.5 C 10.5 -12 7.5 -7.5 0 0 Z" fill="#E2604A"></path><circle cy="-17" r="3.6" fill="#FFFFFF"></circle></g></svg></span></span></h1>
+        </div>
+        <p class="hero-sub">Fenn is the group chat for your village — with a helper inside who tracks the plans, the reminders, and whose turn it is. So you don't have to.</p>
       </div>
-      <p class="hero-sub">Fenn is the group chat for your village — with a helper inside who tracks the plans, the reminders, and whose turn it is. So you don't have to.</p>
     </div>
 
     <div class="thread">
